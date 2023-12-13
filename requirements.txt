@@ -1,0 +1,3 @@
+Python lib needed:
+sys
+PyQt5, 
