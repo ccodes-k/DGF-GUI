@@ -1,4 +1,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
+from utils.Compass import Compasswidget
+from GUI.Config_GUI import ConfigWindow
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -39,7 +41,7 @@ class Ui_MainWindow(object):
         
         # In Option widget
         # View Button, just a button in this code
-        # The function (to be fill) can let user able to choose which widget they want or don't want to see 
+        # The function (to be fill) pop out a window can let user able to choose which widget they want or don't want to see 
         self.ViewB = QtWidgets.QPushButton(self.OptionW)
         self.ViewB.setObjectName("ViewB")
         self.gridLayout.addWidget(self.ViewB, 0, 0, 1, 1)
@@ -47,11 +49,14 @@ class Ui_MainWindow(object):
 
         # In Option widget
         # Config Button, just a button in this code
-        # The function (to be fill) can let user to choose which signal they want or don't want to receive
+        # The function (to be fill) pop out a window can let user to choose which signal they want or don't want to receive
         self.ConfigB = QtWidgets.QPushButton(self.OptionW)
         self.ConfigB.setObjectName("ConfigB")
         self.gridLayout.addWidget(self.ConfigB, 0, 1, 1, 1)
         self.ConfigB.setText("Config")
+        # Connect the button's clicked signal to show ConfigWindow
+        self.config_window = ConfigWindow()
+        self.ConfigB.clicked.connect(self.config_window.show)
 
         # In Option widget
         # Refresh Button, just a button in this code
@@ -184,8 +189,9 @@ class Ui_MainWindow(object):
         
         # In CompassW_Container
         # Compass wiget, just a widget in this code
-        # The function (to be fill) is to display Direction (get from GPS) in Compass
-        self.CompassW = QtWidgets.QWidget(self.CompassW_Container)
+        # The function is to display Direction (get from GPS) in Compass
+        self.CompassW = Compasswidget(self.CompassW_Container)
+        self.CompassW.setAngle(0) # set initial angle
         self.CompassW.setObjectName("CompassW")
         self.verticalLayout_3.addWidget(self.CompassW)
         self.verticalLayout_3.setStretch(0, 1)

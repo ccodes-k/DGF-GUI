@@ -2,14 +2,14 @@ import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication, QWidget, QFileDialog
 
-class MyWindow(QWidget):
+class ConfigWindow(QWidget):
     OpenFile = 0
     OpenFiles = 1
     OpenDirectory = 2
     SaveFile = 3
 
     def __init__(self, mode=OpenFile):
-        super(MyWindow, self).__init__()
+        super(ConfigWindow, self).__init__()
         self.p = None
 
         # window setup
@@ -98,15 +98,15 @@ class MyWindow(QWidget):
     def getFile(self):
         self.filepaths = []
         
-        if self.browser_mode == MyWindow.OpenFile:
+        if self.browser_mode == ConfigWindow.OpenFile:
             self.filepaths.append(QFileDialog.getOpenFileName(self, caption='Choose File',
                                                     directory=self.dirpath,
                                                     filter=self.filter_name)[0])
-        elif self.browser_mode == MyWindow.OpenFiles:
+        elif self.browser_mode == ConfigWindow.OpenFiles:
             self.filepaths.extend(QFileDialog.getOpenFileNames(self, caption='Choose Files',
                                                     directory=self.dirpath,
                                                     filter=self.filter_name)[0])
-        elif self.browser_mode == MyWindow.OpenDirectory:
+        elif self.browser_mode == ConfigWindow.OpenDirectory:
             self.filepaths.append(QFileDialog.getExistingDirectory(self, caption='Choose Directory',
                                                     directory=self.dirpath))
         else:
@@ -203,7 +203,7 @@ class MyWindow(QWidget):
     # start python program
     def start(self):
         if self.p is None:
-            self.message("Executing process")
+            self.message("Executing Config process")
             self.p = QtCore.QProcess()
             self.p.readyReadStandardOutput.connect(self.handle_stdout)
             self.p.stateChanged.connect(self.handle_state)
@@ -214,19 +214,16 @@ class MyWindow(QWidget):
 
     # stop python program
     def process_finished(self):
-        self.message("Process finished.")
+        self.message("Config Process finished.")
         self.p = None
         
-    
-    def close(self):
-        quit()
+    # def close(self):
+    #     self.ConfigWindow.close()
 
+# def data_viewer():
+#     app = QApplication(sys.argv)
+#     win = ConfigWindow()
+#     win.show()
+#     sys.exit(app.exec_())
 
-def data_viewer():
-    app = QApplication(sys.argv)
-    win = MyWindow()
-    win.show()
-    sys.exit(app.exec_())
-
-# start the UI
-data_viewer()
+# data_viewer()

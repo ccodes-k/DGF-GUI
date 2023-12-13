@@ -2,8 +2,6 @@ from PyQt5 import QtWidgets
 import sys
 from GUI.GUI_Base_Structure import Ui_MainWindow
 
-
-
 if __name__ == "__main__":
     ''' To Run the whole code
         input: None
