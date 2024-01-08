@@ -1,13 +1,15 @@
+# create compass
+# self.CompassW.setAngle(0) # set initial angle
+
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 class Compasswidget(QtWidgets.QLabel):
 
     def __init__(self, parent):
         super(Compasswidget, self).__init__(parent)
-        self.setStyleSheet('QFrame {background-color:(239,100,100);}')
         self.resize(100, 100)
         self._angle = 0.0
-        self._margins = 10
+        self._margins = 20
         self._pointText = {0: "N", 45: "NE", 90: "E", 135: "SE", 180: "S",
                            225: "SW", 270: "W", 315: "NW"}
 
@@ -16,7 +18,6 @@ class Compasswidget(QtWidgets.QLabel):
         painter.begin(self)
         painter.setRenderHint(QtGui.QPainter.Antialiasing)
         painter.setPen(QtGui.QColor(168, 34, 3))
-        painter.fillRect(event.rect(), self.palette().brush(QtGui.QPalette.Window))
         self.drawMarkings(painter)
         self.drawNeedle(painter)
         self.drawCenterDot(painter)
@@ -29,8 +30,7 @@ class Compasswidget(QtWidgets.QLabel):
                     (self.height() - self._margins) / 120.0)
         painter.scale(scale, scale)
 
-        font = QtGui.QFont(self.font())
-        font.setPixelSize(10)
+        font = QtGui.QFont("Segoe UI", 10)  
         metrics = QtGui.QFontMetricsF(font)
 
         painter.setFont(font)

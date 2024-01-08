@@ -15,10 +15,18 @@ import getopt
 import glob
 import re
 import pprint
+import bitstruct
+import asyncio
+from bleak import BleakClient
 from mtdevice import main
 from mtdef import MID, OutputMode, OutputSettings, MTException, Baudrates, \
     XDIGroup, getMIDName, DeviceState, DeprecatedMID, MTErrorMessage, \
     MTTimeoutException
+
+HR_MEAS = "00002A37-0000-1000-8000-00805F9B34FB"
+global_values = {
+    'hr_val': 0
+}
 
 class Camera:
 
@@ -1921,30 +1929,79 @@ def sonar():
         print("Keyboard interrupt. Closing serial port.")
         ser.close()
         output_file.close()  # Close the file on keyboard interrupt
-				
+
+
+#Heart Rate sensor
+async def hr_sensor(address, debug=False):
+    async with BleakClient(address) as client:
+        connected = client.is_connected  
+        print("Connected: {0}".format(connected))
+
+        def hr_val_handler(sender, data):
+            global global_values
+            context = zmq.Context()
+            socket7 = context.socket(zmq.REP)
+            print('Binding to port 5561')
+            socket7.bind("tcp://*:5561")
+            print("Connected")
+            hr_val = 0
+            message7 = socket7.recv_string()
+            """Simple notification handler for Heart Rate Measurement."""
+            (hr_fmt,
+             snsr_detect,
+             snsr_cntct_spprtd,
+             nrg_expnd,
+             rr_int) = bitstruct.unpack("b1b1b1b1b1<", data)
+            if hr_fmt:
+                hr_val, = struct.unpack_from("<H", data, 1)
+            else:
+                hr_val, = struct.unpack_from("<B", data, 1)
+            if message7 == 'read7':
+                socket7.send_string(f"HR Value: {hr_val}")
+            print(f"HR Value: {hr_val}")
+            global_values['hr_val'] = hr_val
+        await client.start_notify(HR_MEAS, hr_val_handler)
+
+        while client.is_connected:
+            await asyncio.sleep(1)
+
+def run_heart_rate_monitor(address, debug=False):
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    loop.run_until_complete(hr_sensor(address))
+
+
 if __name__ == "__main__":
-	Camera_helper = Camera()
-	Camera_helper.initiate()
-	t1 = threading.Thread(target=Camera_helper.leftimage)
-	t2 = threading.Thread(target=Camera_helper.rightimage)
-	t3 = threading.Thread(target=Camera_helper.temperature)
-	t4 = threading.Thread(target=IMU)
-	t5 = threading.Thread(target=GPS)
-	t6 = threading.Thread(target=sonar)
+    address = "a0:9e:1a:c3:53:b9"
+
+    Camera_helper = Camera()
+    Camera_helper.initiate()
+    t1 = threading.Thread(target=Camera_helper.leftimage)
+    t2 = threading.Thread(target=Camera_helper.rightimage)
+    t3 = threading.Thread(target=Camera_helper.temperature)
+    t4 = threading.Thread(target=IMU)
+    t5 = threading.Thread(target=GPS)
+    t6 = threading.Thread(target=sonar)
+
+    # Start the heart rate monitoring in a separate thread
+    t7 = threading.Thread(target=run_heart_rate_monitor, args=(address,))
+    
 	
 		
-	t1.start()
-	t2.start()
-	t3.start()
-	#t4.start()
-	#t5.start()
-	#t6.start()
+    t1.start()
+    t2.start()
+    t3.start()
+    #t4.start()
+    #t5.start()
+    #t6.start()
+    # t7.start()
 	
-	t1.join()
-	t2.join()
-	t3.join()
-	#t4.join()
-	#t5.join()
-	#t6.join()
+    t1.join()
+    t2.join()
+    t3.join()
+    #t4.join()
+    #t5.join()
+    #t6.join()
+    # t7.join()
 
-	Camera_helper.pipe.stop()
+    Camera_helper.pipe.stop()
