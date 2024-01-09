@@ -14,6 +14,7 @@ from utils.Map import MapDisplay
 class Overlayed_W(MapDisplay):
     def __init__(self, parent=None):
         super(Overlayed_W, self).__init__(parent)
+        self.setWindowTitle("Diver Monitor")
 
     # Option Buttons:
 
@@ -138,7 +139,7 @@ class Overlayed_W(MapDisplay):
         self.SI.setText("SLAM: Start")
 
     #For Camera
-        self.Cam.updateimg(self.config_window.server)
+        
 
 if __name__ == "__main__":
     app = QApplication([])

@@ -9,7 +9,7 @@ from utils.CompassAndLabel import CompassDisplay
 
 from utils.DataGraphs import DataDisplay
 
-from utils.Camera import Camera_img
+from utils.Camera import CameraW
 
 # Option Buttons
 class Ob_Floating_Button(QPushButton):
@@ -142,7 +142,7 @@ class Data_Floating_Widget(DataDisplay):
         self.setGeometry(x, y, 500, 850)
 
 # Camera
-class Cam_Floating_Widget(Camera_img):
+class Cam_Floating_Widget(CameraW):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.paddingRight = 30
@@ -155,4 +155,4 @@ class Cam_Floating_Widget(Camera_img):
         parent_height = self.parent().height()
         x = int(parent_width - self.width() - self.paddingRight)
         y = int(parent_height - self.height() - self.paddingBottom)
-        self.setGeometry(x, y, 400, 300)
+        self.setGeometry(x, y, 320, 240)
