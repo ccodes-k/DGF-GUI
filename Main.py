@@ -43,14 +43,11 @@ class Overlayed_W(MapDisplay):
         # SLAM indicator
         self.SI = FloatingW.SI_Floating_Button(parent=self, text="SLAM: Stop")
         
-        # Play Button
+        # Start & Stop Button
+        self.StartB = FloatingW.Slam_Floating_Button(parent=self, text="Start")
+
+        # Play & Pause Button
         self.PlayB = FloatingW.Slam_Floating_Button(parent=self, text="Play")
-
-        # Pause Button
-        self.PauseB = FloatingW.Slam_Floating_Button(parent=self, text="Pause")
-
-        # Stop Button
-        self.StopB = FloatingW.Slam_Floating_Button(parent=self, text="Stop")
     
     # Data Graphs
         self.DGW = FloatingW.Data_Floating_Widget(parent=self)
@@ -67,9 +64,6 @@ class Overlayed_W(MapDisplay):
         self.timerM.setInterval(250)
         self.timerM.timeout.connect(self.update_data)
         self.timerM.start()
-    
-        self.setWindowFlag(QtCore.Qt.WindowMinimizeButtonHint, False)
-        self.setWindowFlag(QtCore.Qt.WindowMaximizeButtonHint, False)
 
     def resizeEvent(self, event):
         super().resizeEvent(event)
@@ -90,8 +84,7 @@ class Overlayed_W(MapDisplay):
     # SLAM Buttons
         self.SI.SI_update_position_Buttons()
         self.PlayB.Slam_update_position_Buttons(0)
-        self.PauseB.Slam_update_position_Buttons(1)
-        self.StopB.Slam_update_position_Buttons(2)
+        self.StartB.Slam_update_position_Buttons(1)
     
     # Data Graphs
         self.DGW.Data_update_position_Widgets()

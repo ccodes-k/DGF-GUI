@@ -93,10 +93,10 @@ class Slam_Floating_Button(QPushButton):
     # Bottom Center
     def Slam_update_position_Buttons(self, index):
         parent_width = self.parent().width()
-        total_width = 3 * self.width()  # Total width of all three buttons
+        total_width = 2 * self.width() + 10  # Total width of all three buttons
         x = (parent_width - total_width) // 2 + index * (self.width() + 5)
         y = self.parent().height() - self.height() - self.paddingBottom  
-        self.setGeometry(x, y, self.width(), self.height())
+        self.setGeometry(x, y, self.width() + 2, self.height() + 2)
     
     # Override the hover enter event
     def enterEvent(self, event):
@@ -124,7 +124,7 @@ class SI_Floating_Button(QLabel):
         parent_height = self.parent().height()
         x = (parent_width - self.width()) // 2
         y = int(parent_height - self.height() - self.paddingBottom)
-        self.setGeometry(x, y, 130, 30)
+        self.setGeometry(x, y, 150, 30)
 
 # Data Graphs
 class Data_Floating_Widget(DataDisplay): 
