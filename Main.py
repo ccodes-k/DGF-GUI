@@ -144,6 +144,9 @@ class Overlayed_W(MapDisplay):
     # Some if else for SLAM start or stop or pause
         self.SI.setText("SLAM: Start")
 
+    #For Camera
+        self.Cam.updateimg(self.config_window.server)
+
 if __name__ == "__main__":
     app = QApplication([])
     window = Overlayed_W()

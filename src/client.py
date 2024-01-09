@@ -1885,7 +1885,7 @@ def GPS():
                         f2.write(lat_lon_str)  # Write lat and lon to LL.txt
                         message5 = socket5.recv_string()
                         if message5 == 'read5':
-                            socket2.send_string(str(lat_lon_str))
+                            socket5.send_string(str(lat_lon_str))
                         f2.flush()  # Flush the data to the file
                 elif t.startswith('$GNRMC'):
                     data = t.split(',')
@@ -1930,49 +1930,72 @@ def sonar():
         ser.close()
         output_file.close()  # Close the file on keyboard interrupt
 
+def HR_SpO2():
+    context = zmq.Context()
+    socket = context.socket(zmq.REP)
+    print('Binding to port 5561')
+    socket.bind("tcp://*:5561")
+    print("Connected")
+    
+    prev_diff = True
+    updated = False
+    counter = 0
+    MA_window = []
+    HR_window = []
+    
+    prev_time = time.time()
+    t = time.time()
+    while True:        
+        while(GPIO.input(m.interrupt) == 1):
+            # wait for interrupt signal, which means the data is available
+            # do nothing here
+            pass
+        red, ir = m.read_fifo()
+        ir_list.append(ir)
+        red_list.append(red)
+        
+        if len(ir_list)>100:
+            ir_list.pop(0)
+            red_list.pop(0)
+            
+        if len(ir_list)<100:
+            continue
+            
+        #print(red,ir)
+        MA_window.append(red)
+        if len(MA_window)<9:
+            continue
+        
+        mean = sum(MA_window)/9
 
-#Heart Rate sensor
-async def hr_sensor(address, debug=False):
-    async with BleakClient(address) as client:
-        connected = client.is_connected  
-        print("Connected: {0}".format(connected))
-
-        def hr_val_handler(sender, data):
-            global global_values
-            context = zmq.Context()
-            socket7 = context.socket(zmq.REP)
-            print('Binding to port 5561')
-            socket7.bind("tcp://*:5561")
-            print("Connected")
-            hr_val = 0
-            message7 = socket7.recv_string()
-            """Simple notification handler for Heart Rate Measurement."""
-            (hr_fmt,
-             snsr_detect,
-             snsr_cntct_spprtd,
-             nrg_expnd,
-             rr_int) = bitstruct.unpack("b1b1b1b1b1<", data)
-            if hr_fmt:
-                hr_val, = struct.unpack_from("<H", data, 1)
+        diff = (red - mean)>0
+        
+        bpm, valid_bpm, spo2, valid_spo2 = hrcalc.calc_hr_and_spo2(ir_list, red_list)
+        
+        if diff and not prev_diff:
+            if red > 110000:
+                bpm = (1/(time.time() - prev_time))
+                bpm = bpm*60
+                HR_window.append(bpm)
+                prev_time = time.time()
+                print("BPM:", int(sum(HR_window)/len(HR_window)))
+                SpO2 = ";SpO2: %i" %spo2
+                print(SpO2)
+                updated = True
             else:
-                hr_val, = struct.unpack_from("<B", data, 1)
-            if message7 == 'read7':
-                socket7.send_string(f"HR Value: {hr_val}")
-            print(f"HR Value: {hr_val}")
-            global_values['hr_val'] = hr_val
-        await client.start_notify(HR_MEAS, hr_val_handler)
-
-        while client.is_connected:
-            await asyncio.sleep(1)
-
-def run_heart_rate_monitor(address, debug=False):
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
-    loop.run_until_complete(hr_sensor(address))
+                print("Finger not detected")
+        prev_diff = diff
+        MA_window.pop(0)
+        t = time.time()
+        if len(HR_window)>15:
+            HR_window.pop(0)
+        if updated:
+            message = socket.recv_string()
+            socket.send_string("BPM:" +str(sum(HR_window)/len(HR_window)) +SpO2)
+            updated = False
 
 
 if __name__ == "__main__":
-    address = "a0:9e:1a:c3:53:b9"
 
     Camera_helper = Camera()
     Camera_helper.initiate()
@@ -1982,9 +2005,7 @@ if __name__ == "__main__":
     t4 = threading.Thread(target=IMU)
     t5 = threading.Thread(target=GPS)
     t6 = threading.Thread(target=sonar)
-
-    # Start the heart rate monitoring in a separate thread
-    t7 = threading.Thread(target=run_heart_rate_monitor, args=(address,))
+    t7 = threading.Thread(target=HR_SpO2)
     
 	
 		

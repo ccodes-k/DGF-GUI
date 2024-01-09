@@ -53,7 +53,7 @@ class WaveHR(QWidget):
     def updateWaveHR(self,server):
         if server is None:
            new_value = 0
-        else: 
+        else:
             new_value = server.HR
 
         # Label
