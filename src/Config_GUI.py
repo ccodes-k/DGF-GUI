@@ -248,7 +248,7 @@ class ConfigWindow(QWidget):
             self.p.readyReadStandardOutput.connect(self.handle_stdout)
             self.p.stateChanged.connect(self.handle_state)
             # self.p.start("python3", self.start_functions())
-            print(r"python3 ./utils/server.py" + self.start_functions())
+            print(r"python3 ./utils/server1.py" + self.start_functions())
             # self.p.start(r"python3 .\utils\server.py" + self.start_functions())
             self.server, self.threads = Runner(image = self.b1.isChecked(),
                                                temperature = self.b2.isChecked(),

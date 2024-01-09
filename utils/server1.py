@@ -192,14 +192,12 @@ class Talker:
                         None
         '''
         socket3 = init_socket(self.IP, port)
-        with open('temp.txt', 'w') as f1:
-                while True:
-                        socket3.send_string('read3')
-                        self.temp = socket3.recv_string()
-                        print(self.temp)
-                        f1.write(self.temp + '\n')
-                        f1.flush()
-                        time.sleep(1)
+        while True:
+                socket3.send_string('read3')
+                temp = socket3.recv_string()
+                temp = temp.split(":")
+                self.temp = int(float(temp[1]))
+                # print(temp)
 
     def show_IMU(self, port='5558'):
         '''
@@ -243,13 +241,10 @@ class Talker:
                         None
         '''
         socket5 = init_socket(self.IP, port)
-        with open('gps.txt', 'w') as f3:
-                while True:
-                        socket5.send_string('read5')
-                        GPS = socket5.recv_string()
-                        print(GPS)
-                        f3.write(GPS)
-                        f3.flush()
+        while True:
+                socket5.send_string('read5')
+                GPS = socket5.recv_string()
+                print(GPS)
 
     def show_sonar(self, port='5560'):
         '''
@@ -262,15 +257,12 @@ class Talker:
                         None
         '''
         socket6 = init_socket(self.IP, port)
-        with open('sonar.txt', 'w') as f4:
-                while True:
-                        socket6.send_string('read6')
-                        sonar = socket6.recv_string()
-                        # print(sonar)
-                        f4.write(sonar)
-                        f4.flush()
+        while True:
+                socket6.send_string('read6')
+                sonar = socket6.recv_string()
+                # print(sonar)
 
-    def show_HR(self, port='5561',HR=0):
+    def show_HR(self, port='5561'):
         '''
                 Communication with Heart rate sensor
 
@@ -284,11 +276,12 @@ class Talker:
         socket7 = init_socket(self.IP, port)
         while True:
                 socket7.send_string('read7')
-                HR = socket7.recv_string()
-                HR = HR.split(":")
-                HR = int(float(HR[1]))
-                return HR
-                # print(HR)
+                data = socket7.recv_string()
+                data = data.split(";")
+                data[0] = data[0].split(":")
+                data[1] = data[1].split(":")
+                self.HR = int(float(data[0][1]))
+                self.SpO2 = int(float(data[1][1]))
 
 
     def pause_slam(self):
@@ -360,8 +353,6 @@ if __name__ == "__main__":
         args = parser.parse_args()
 
         # print(args)
-        with open('gps.txt', 'w') as f3:
-               pass
         
 
         # Set use_ros to True to initialize ROS publisher
