@@ -63,8 +63,8 @@ class Talker:
         while(1):
             if self.show:
                 self.show = False
-                cv2.imshow('left', self.img_data)
-                cv2.imshow('right', self.img2_data)
+                # cv2.imshow('left', self.img_data)
+                # cv2.imshow('right', self.img2_data)
                 #self._out.write(self.img_data)
                 #self.pub.publish(self.br.cv2_to_imgmsg(self.img_data))
             if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -229,7 +229,7 @@ class Talker:
 
 
 def Runner(image = False, temperature = False, IMU=False, GPS=False, sonar=False, heartrate=False):
-        Talker_helper = Talker(IP_addr='169.254.211.41')
+        Talker_helper = Talker(IP_addr='169.254.203.72')
         
         threads = []
 

@@ -143,14 +143,14 @@ class Data_Floating_Widget(DataDisplay):
 
 # Camera
 class Cam_Floating_Widget(CameraW):
-    def __init__(self, parent=None):
-        super().__init__(parent)
+    def __init__(self, parent=None,server=None):
+        super().__init__(parent, server)
         self.paddingRight = 30
         self.paddingBottom = 45
         self.setStyleSheet("background-color: rgba(255, 255, 255, 150); border-radius: 10px;")
 
     # Bottom Right
-    def Cam_update_position_Widgets(self,server):
+    def Cam_update_position_Widgets(self):
         parent_width = self.parent().width()
         parent_height = self.parent().height()
         x = int(parent_width - self.width() - self.paddingRight)

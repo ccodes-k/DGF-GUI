@@ -54,7 +54,7 @@ class Overlayed_W(MapDisplay):
         self.DGW = FloatingW.Data_Floating_Widget(parent=self)
     
     # Camera
-        self.Cam = FloatingW.Cam_Floating_Widget(parent=self)
+        self.Cam = FloatingW.Cam_Floating_Widget(parent=self, server =self.config_window)
 
     # For map server
         # Connect the closeEvent of the main window to the stop_server method
@@ -127,7 +127,7 @@ class Overlayed_W(MapDisplay):
         d=str(1.5)
         self.DGW.W4.setDepthValue(d)
 
-        print("Data Updated")
+        # print("Data Updated")
     
     # For Diver Status
     # Some if else for Heart Rate, SpO2, Temperature
@@ -139,7 +139,7 @@ class Overlayed_W(MapDisplay):
         self.SI.setText("SLAM: Start")
 
     #For Camera
-        self.Cam.Cam_update_position_Widgets(self.config_window.server)
+        self.Cam.Cam_update_position_Widgets()
 
 if __name__ == "__main__":
     app = QApplication([])

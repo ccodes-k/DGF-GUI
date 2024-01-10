@@ -7,24 +7,30 @@ import sys
 import cv2
 from PyQt5.QtCore import pyqtSignal, pyqtSlot, Qt, QThread
 import numpy as np
+import time
 from utils.server import Talker
+
 
 class VideoThread(QThread):
     change_pixmap_signal = pyqtSignal(np.ndarray)
 
-    def __init__(self):
+    def __init__(self,server):
         super().__init__()
         self._run_flag = True
+        self.server = server
 
-    def run(self,server):
+    def run(self):
         # capture from web cam
-        cap = server.img_data
+        while self.server.server is None:
+            time.sleep(0.01)
+        while self.server.server.img_data is None:
+            time.sleep(0.01)
         while self._run_flag:
-            ret, cv_img = cap.read()
-            if ret:
+            if self.server.server.got_img:
+                self.server.server.got_img = False
+                cv_img = self.server.server.img_data
                 self.change_pixmap_signal.emit(cv_img)
-        # shut down capture system
-        cap.release()
+            time.sleep(0.01)
 
     def stop(self):
         """Sets run flag to False and waits for thread to finish"""
@@ -32,7 +38,7 @@ class VideoThread(QThread):
         self.wait()
 
 class CameraW(QWidget):
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, server=None):
         super().__init__(parent)
         self.disply_width = 320
         self.display_height = 240
@@ -47,7 +53,7 @@ class CameraW(QWidget):
         self.setLayout(vbox)
 
         # create the video capture thread
-        self.thread = VideoThread()
+        self.thread = VideoThread(server)
         # connect its signal to the update_image slot
         self.thread.change_pixmap_signal.connect(self.update_image)
         # start the thread
