@@ -7,7 +7,7 @@ import sys
 import cv2
 from PyQt5.QtCore import pyqtSignal, pyqtSlot, Qt, QThread
 import numpy as np
-
+from utils.server import Talker
 
 class VideoThread(QThread):
     change_pixmap_signal = pyqtSignal(np.ndarray)
@@ -16,9 +16,9 @@ class VideoThread(QThread):
         super().__init__()
         self._run_flag = True
 
-    def run(self):
+    def run(self,server):
         # capture from web cam
-        cap = cv2.VideoCapture(0)
+        cap = server.img_data
         while self._run_flag:
             ret, cv_img = cap.read()
             if ret:

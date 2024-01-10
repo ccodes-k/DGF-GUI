@@ -139,7 +139,7 @@ class Overlayed_W(MapDisplay):
         self.SI.setText("SLAM: Start")
 
     #For Camera
-        
+        self.Cam.Cam_update_position_Widgets(self.config_window.server)
 
 if __name__ == "__main__":
     app = QApplication([])

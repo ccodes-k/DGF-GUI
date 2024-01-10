@@ -150,7 +150,7 @@ class Cam_Floating_Widget(CameraW):
         self.setStyleSheet("background-color: rgba(255, 255, 255, 150); border-radius: 10px;")
 
     # Bottom Right
-    def Cam_update_position_Widgets(self):
+    def Cam_update_position_Widgets(self,server):
         parent_width = self.parent().width()
         parent_height = self.parent().height()
         x = int(parent_width - self.width() - self.paddingRight)
