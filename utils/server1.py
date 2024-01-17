@@ -93,6 +93,10 @@ class Talker:
         self.got_imu = False
 
         self.show = False
+        self.HR = 0
+        self.SpO2 = 0
+        self.temp = 0
+        self.depth = 0
 
         self.use_ros = use_ros
 
@@ -246,7 +250,7 @@ class Talker:
                 GPS = socket5.recv_string()
                 print(GPS)
 
-    def show_sonar(self, port='5560'):
+    def show_depth(self, port='5560'):
         '''
                 Communication with sonar
 
@@ -259,7 +263,10 @@ class Talker:
         socket6 = init_socket(self.IP, port)
         while True:
                 socket6.send_string('read6')
-                sonar = socket6.recv_string()
+                recv = socket6.recv_string()
+                recv = recv.split(":")
+                self.depth = float(recv[1])
+                print(float(recv[1]), "m")
                 # print(sonar)
 
     def show_HR(self, port='5561'):
@@ -299,7 +306,7 @@ class Talker:
            '''
            self.play = False
 
-def Runner(image = False, temperature = False, IMU=False, GPS=False, sonar=False, heartrate=False):
+def Runner(image = False, temperature = False, IMU=False, GPS=False, depth=False, heartrate=False):
         Talker_helper = Talker(IP_addr='169.254.211.41')
         
         threads = []
@@ -324,8 +331,8 @@ def Runner(image = False, temperature = False, IMU=False, GPS=False, sonar=False
                 t6 = threading.Thread(target=Talker_helper.show_GPS)
                 threads.append(t6)
 
-        if sonar:
-                t7 = threading.Thread(target=Talker_helper.show_sonar)
+        if depth:
+                t7 = threading.Thread(target=Talker_helper.show_depth)
                 threads.append(t7)
 
         if heartrate:
@@ -347,7 +354,7 @@ if __name__ == "__main__":
         parser.add_argument("-t", "--temperature", action="store_true")
         parser.add_argument("-i", "--IMU", action="store_true")
         parser.add_argument("-g", "--GPS", action="store_true")
-        parser.add_argument("-s", "--sonar", action="store_true")
+        parser.add_argument("-d", "--depth", action="store_true")
         parser.add_argument("-hr", "--heartrate", action="store_true")
         parser.add_argument("-ros", "--UseROS", action="store_true")
         args = parser.parse_args()
@@ -384,7 +391,7 @@ if __name__ == "__main__":
                 threads.append(t6)
 
         if args.sonar:
-                t7 = threading.Thread(target=Talker_helper.show_sonar)
+                t7 = threading.Thread(target=Talker_helper.show_depth)
                 threads.append(t7)
 
         if args.heartrate:

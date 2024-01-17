@@ -5,6 +5,7 @@ import pyqtgraph as pg
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
+from utils.server import Talker
 
 class OneHorlineD(QWidget):
     def __init__(self, parent=None):
@@ -54,11 +55,14 @@ class OneHorlineD(QWidget):
         mDV = float(self.Dv) * -1
         self.line.setValue(mDV)
 
-    def setDepthValue(self, new_value):
+    def setDepthValue(self, server):
         # Set a new Depth value and update the vertical line
-        self.Dv = new_value
+        if server.depth < 0:
+           new_value = 0
+        else:
+            new_value = server.depth
         #Label
-        self.label.setText(f"Depth: {self.Dv} m")
+        self.label.setText(f"Depth: {new_value} m")
         #Graph
         self.updateHorizontalLine()
 

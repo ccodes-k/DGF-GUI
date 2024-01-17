@@ -85,7 +85,7 @@ class ConfigWindow(QWidget):
         self.b4.move(515, 560)
         self.b4.toggled.connect(lambda:self.btnstate(self.b4))
 
-        self.b5 = QtWidgets.QCheckBox("Sonar",self)
+        self.b5 = QtWidgets.QCheckBox("Depth",self)
         self.b5.move(575, 560)
         self.b5.toggled.connect(lambda:self.btnstate(self.b5))
 
@@ -170,7 +170,7 @@ class ConfigWindow(QWidget):
         if self.b4.isChecked():
             self.functions+= ' -g'
         if self.b5.isChecked():
-            self.functions+= ' -s'
+            self.functions+= ' -d'
         if self.b6.isChecked():
             self.functions+= ' -hr'        
         # print(self.functions)
@@ -205,7 +205,7 @@ class ConfigWindow(QWidget):
             else:
                 print(b.text()+" is deselected")
 
-        if b.text() == "Sonar":
+        if b.text() == "Depth":
             if b.isChecked() == True:
                 print(b.text()+" is selected")
             else:
