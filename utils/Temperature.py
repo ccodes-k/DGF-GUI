@@ -61,7 +61,7 @@ class OneVerlineT(QWidget):
         else: 
             new_value = server.temp
         #Label
-        self.label.setText(f"Temperature: {new_value}")
+        self.label.setText(f"Temperature: {new_value} °C")
         #Graph
         self.updateVerticalLine(new_value)
 

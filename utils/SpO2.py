@@ -61,7 +61,7 @@ class OneVerlineO(QWidget):
         else: 
             new_value = server.SpO2
         #Label
-        self.label.setText(f"SpO2: {new_value}%")
+        self.label.setText(f"SpO2: {new_value} %")
         #Graph
         self.updateVerticalLine()
 
