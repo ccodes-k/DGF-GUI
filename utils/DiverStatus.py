@@ -4,6 +4,7 @@
 from PyQt5.QtWidgets import QLabel, QVBoxLayout, QWidget
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
+from utils.server import Talker
 
 class StatusLabel(QWidget):
     def __init__(self, parent=None):
@@ -55,3 +56,22 @@ class StatusLabel(QWidget):
                 "color: red; background-color: rgba(255, 255, 255, 150); border-radius: 10px;"
             )
             self.status_label.setText("!!! Danger !!!")
+
+    def update_status(self,server):
+        if server is None:
+            hr = 0
+            temp = 0
+            spo2 = 0
+            self.set_status("N")
+        else:
+            # Heart Rate
+            hr = server.HR
+            # Temperature
+            temp = server.temp
+            # SpO2
+            spo2 = server.SpO2
+
+        if 60 <= hr <= 120 and 95 <= spo2 <= 100:
+            self.set_status("S")  # Safe
+        else:
+            self.set_status("D")  # Dangerous

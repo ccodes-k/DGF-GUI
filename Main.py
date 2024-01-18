@@ -115,28 +115,22 @@ class Overlayed_W(MapDisplay):
 
     # For Data Graphs
         # For Heart Rate
-        h=str(82)
         self.DGW.W1.updateWaveHR(self.config_window.server)
         # For SpO2
-        o=str(98)
         self.DGW.W2.setSpO2Value(self.config_window.server)
         # For Temperature
-        t=str(36.8)
         self.DGW.W3.setTemperatureValue(self.config_window.server)
         # For Temperature
-        d=str(1.5)
-        self.DGW.W4.setDepthValue(d)
-
+        self.DGW.W4.setDepthValue(self.config_window.server)
         # print("Data Updated")
     
     # For Diver Status
-    # Some if else for Heart Rate, SpO2, Temperature
     # so the label will be Null, Safe or Danger
-        self.DiverStatus.set_status("S")
+        self.DiverStatus.update_status(self.config_window.server)
 
     # For SLAM indicator
     # Some if else for SLAM start or stop or pause
-        self.SI.setText("SLAM: Start")
+        self.SI.setText("SLAM: Null")
 
     #For Camera
         self.Cam.Cam_update_position_Widgets()

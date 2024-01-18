@@ -37,14 +37,14 @@ class OneHorlineD(QWidget):
         # Set background color
         self.plotWidget.setBackground('default')
 
-        # Set x-axis range
+        # Set y-axis range with inverted values
         self.plotWidget.setYRange(10, -30, padding=0)
 
         # Hide left axis
         self.plotWidget.getPlotItem().hideAxis('bottom')
 
         # Initialize Depth value
-        self.Dv = -1.5
+        self.Dv = 1.5
 
         # Add the initial line
         self.line = pg.InfiniteLine(self.Dv, angle=0, pen='b')
@@ -57,9 +57,9 @@ class OneHorlineD(QWidget):
 
     def setDepthValue(self, server):
         # Set a new Depth value and update the vertical line
-        if server.depth < 0:
+        if server is None:
            new_value = 0
-        else:
+        else: 
             new_value = server.depth
         #Label
         self.label.setText(f"Depth: {new_value} m")
