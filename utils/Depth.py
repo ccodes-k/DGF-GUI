@@ -38,7 +38,11 @@ class OneHorlineD(QWidget):
         self.plotWidget.setBackground('default')
 
         # Set y-axis range with inverted values
-        self.plotWidget.setYRange(10, -30, padding=0)
+        self.plotWidget.setYRange(-10, 30, padding=0)
+
+        # Invert the Y-axis
+        viewbox = self.plotWidget.getViewBox()  # Retrieve the ViewBox
+        viewbox.invertY(True)
 
         # Hide left axis
         self.plotWidget.getPlotItem().hideAxis('bottom')
@@ -52,7 +56,7 @@ class OneHorlineD(QWidget):
 
     def updateHorizontalLine(self):
         # Update the existing line with the current Depth value
-        mDV = float(self.Dv) * -1
+        mDV = float(self.Dv)
         self.line.setValue(mDV)
 
     def setDepthValue(self, server):
