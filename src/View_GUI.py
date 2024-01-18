@@ -10,26 +10,26 @@ class ViewWindow(QWidget):
             Setting up the window
         '''
         super(ViewWindow, self).__init__()
-        self.resize(150, 250)
+        self.resize(250, 250)
         self.setWindowTitle("View")
         self.initUI()
 
     def initUI(self):
 
         # checkboxes
-        self.b1 = QtWidgets.QCheckBox("Heart Rate",self)
+        self.b1 = QtWidgets.QCheckBox("Heart Rate and SpO2",self)
         self.b1.move(30, 10)
         self.b1.setChecked(True)
 
-        self.b2 = QtWidgets.QCheckBox("SpO2",self)
+        self.b2 = QtWidgets.QCheckBox("Temperature",self)
         self.b2.move(30, 50)
         self.b2.setChecked(True)
 
-        self.b3 = QtWidgets.QCheckBox("Temperature",self)
+        self.b3 = QtWidgets.QCheckBox("Depth",self)
         self.b3.move(30, 90)
         self.b3.setChecked(True)
 
-        self.b4 = QtWidgets.QCheckBox("Lat & Long",self)
+        self.b4 = QtWidgets.QCheckBox("Lat and Long",self)
         self.b4.move(30, 130)
         self.b4.setChecked(True)
 

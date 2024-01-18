@@ -74,23 +74,19 @@ class ConfigWindow(QWidget):
         self.b1.toggled.connect(lambda:self.btnstate(self.b1))
         
         self.b2 = QtWidgets.QCheckBox("Temp",self)
-        self.b2.move(385, 560)
+        self.b2.move(515, 560)
         self.b2.toggled.connect(lambda:self.btnstate(self.b2))
 
-        self.b3 = QtWidgets.QCheckBox("IMU",self)
-        self.b3.move(455, 560)
-        self.b3.toggled.connect(lambda:self.btnstate(self.b3))
-
         self.b4 = QtWidgets.QCheckBox("GPS",self)
-        self.b4.move(515, 560)
+        self.b4.move(385, 560)
         self.b4.toggled.connect(lambda:self.btnstate(self.b4))
 
         self.b5 = QtWidgets.QCheckBox("Depth",self)
-        self.b5.move(575, 560)
+        self.b5.move(455, 560)
         self.b5.toggled.connect(lambda:self.btnstate(self.b5))
 
-        self.b6 = QtWidgets.QCheckBox("Heart Rate",self)
-        self.b6.move(645, 560)
+        self.b6 = QtWidgets.QCheckBox("Heart Rate and SpO2",self)
+        self.b6.move(575, 560)
         self.b6.toggled.connect(lambda:self.btnstate(self.b6))
 
         # text box
@@ -165,8 +161,6 @@ class ConfigWindow(QWidget):
             self.functions+= ' -im'
         if self.b2.isChecked():
             self.functions+= ' -t'
-        if self.b3.isChecked():
-            self.functions+= ' -i'
         if self.b4.isChecked():
             self.functions+= ' -g'
         if self.b5.isChecked():
@@ -252,7 +246,6 @@ class ConfigWindow(QWidget):
             # self.p.start(r"python3 .\utils\server.py" + self.start_functions())
             self.server, self.threads = Runner(image = self.b1.isChecked(),
                                                temperature = self.b2.isChecked(),
-                                               IMU=self.b3.isChecked(),
                                                GPS=self.b4.isChecked(),
                                                sonar=self.b5.isChecked(),
                                                heartrate=self.b6.isChecked())
