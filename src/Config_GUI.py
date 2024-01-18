@@ -82,7 +82,7 @@ class ConfigWindow(QWidget):
         self.b4.toggled.connect(lambda:self.btnstate(self.b4))
 
         self.b5 = QtWidgets.QCheckBox("Depth",self)
-        self.b5.move(455, 560)
+        self.b5.move(450, 560)
         self.b5.toggled.connect(lambda:self.btnstate(self.b5))
 
         self.b6 = QtWidgets.QCheckBox("Heart Rate and SpO2",self)

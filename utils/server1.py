@@ -27,30 +27,6 @@ try:
 except Exception as e:
        warnings.warn(f"ROSPY not imported!!.... Error: {e}")
 
-# converting quarternion data from IMU to euler
-def euler_from_quaternion(x, y, z, w):
-        """
-        Convert a quaternion into euler angles (roll, pitch, yaw)
-        roll is rotation around x in radians (counterclockwise)
-        pitch is rotation around y in radians (counterclockwise)
-        yaw is rotation around z in radians (counterclockwise)
-        """
-        t0 = +2.0 * (w * x + y * z)
-        t1 = +1.0 - 2.0 * (x * x + y * y)
-        roll_x = math.atan2(t0, t1)
-     
-        t2 = +2.0 * (w * y - z * x)
-        t2 = +1.0 if t2 > +1.0 else t2
-        t2 = -1.0 if t2 < -1.0 else t2
-        pitch_y = math.asin(t2)
-     
-        t3 = +2.0 * (w * z + x * y)
-        t4 = +1.0 - 2.0 * (y * y + z * z)
-        yaw_z = math.atan2(t3, t4)
-     
-        return roll_x, pitch_y, yaw_z # in radians
-
-
 class ROS_Talker:
         def __init__(self) -> None:
                 rospy.init_node("Stereo_py.node")
@@ -88,9 +64,6 @@ class Talker:
         self.img_data = None
         self.img2_data = None
         self.got_img = False
-
-        self.imu_data = None
-        self.got_imu = False
 
         self.show = False
         self.HR = 0
@@ -203,36 +176,6 @@ class Talker:
                 self.temp = int(float(temp[1]))
                 # print(temp)
 
-    def show_IMU(self, port='5558'):
-        '''
-        Communication with IMU
-
-        input:
-                port = port number of IMU
-
-        output:
-                None
-        '''
-        socket4 = init_socket(self.IP, port)
-        with open('imu.txt', 'w') as f2:
-                while True:
-                        socket4.send_string('read4')
-                        IMU = socket4.recv_string()
-                        IMU = IMU.replace("'","\"")
-                        IMU = json.loads(IMU)
-                        x = IMU["Orientation Data"]["Q0"]
-                        y = IMU["Orientation Data"]["Q1"]
-                        z = IMU["Orientation Data"]["Q2"]
-                        w = IMU["Orientation Data"]["Q3"]
-                        # print(x, y)
-                        IMU = euler_from_quaternion(x, y, z, w)
-                        self.theta = IMU[0]
-                        # print(self.x, self.y)
-                        self.x = 1
-                        self.y = 1
-                        new_coord = getnewlatlong(self.x, self.y, self.theta)
-                        f2.write(str(new_coord) + '\n')
-                        f2.flush()
 
     def show_GPS(self, port='5559'):
         '''
@@ -306,7 +249,7 @@ class Talker:
            '''
            self.play = False
 
-def Runner(image = False, temperature = False, IMU=False, GPS=False, depth=False, heartrate=False):
+def Runner(image = False, temperature = False, GPS=False, depth=False, heartrate=False):
         Talker_helper = Talker(IP_addr='169.254.211.41')
         
         threads = []
@@ -322,10 +265,6 @@ def Runner(image = False, temperature = False, IMU=False, GPS=False, depth=False
         if temperature:
                t4 = threading.Thread(target=Talker_helper.show_temp)
                threads.append(t4)
-
-        if IMU:
-                t5 = threading.Thread(target=Talker_helper.show_IMU)
-                threads.append(t5)
                 
         if GPS:
                 t6 = threading.Thread(target=Talker_helper.show_GPS)
@@ -352,7 +291,6 @@ if __name__ == "__main__":
         parser = argparse.ArgumentParser()
         parser.add_argument("-im", "--image", action="store_true")
         parser.add_argument("-t", "--temperature", action="store_true")
-        parser.add_argument("-i", "--IMU", action="store_true")
         parser.add_argument("-g", "--GPS", action="store_true")
         parser.add_argument("-d", "--depth", action="store_true")
         parser.add_argument("-hr", "--heartrate", action="store_true")
@@ -374,23 +312,19 @@ if __name__ == "__main__":
                 threads.append(t1)
                 threads.append(t2)
                 threads.append(t3)
-                if args.ros:
+                if args.UseROS:
                         t9 = threading.Thread(target=Talker_helper.pub_img)
                         threads.append(t9)
 
         if args.temperature:
                t4 = threading.Thread(target=Talker_helper.show_temp)
                threads.append(t4)
-
-        if args.IMU:
-                t5 = threading.Thread(target=Talker_helper.show_IMU)
-                threads.append(t5)
                 
         if args.GPS:
                 t6 = threading.Thread(target=Talker_helper.show_GPS)
                 threads.append(t6)
 
-        if args.sonar:
+        if args.depth:
                 t7 = threading.Thread(target=Talker_helper.show_depth)
                 threads.append(t7)
 
@@ -410,7 +344,6 @@ if __name__ == "__main__":
         # t2 = threading.Thread(target=Talker_helper.right)
         # t3 = threading.Thread(target=Talker_helper.show_img)
         # t4 = threading.Thread(target=Talker_helper.show_temp)
-        # t5 = threading.Thread(target=Talker_helper.show_IMU)
         # t6 = threading.Thread(target=Talker_helper.show_GPS)
         # t7 = threading.Thread(target=Talker_helper.show_sonar)
 

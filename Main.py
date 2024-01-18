@@ -32,7 +32,6 @@ class Overlayed_W(MapDisplay):
 
     # Diver Status:
         self.DiverStatus = FloatingW.Ds_Floating_Widget(parent=self)
-        self.DiverStatus.set_status("S")
 
     # Lat & Long Label:
         self.LLL = FloatingW.LL_Floating_Widget(parent=self, text="Lat: Null | Long: Null")
@@ -120,7 +119,7 @@ class Overlayed_W(MapDisplay):
         self.DGW.W2.setSpO2Value(self.config_window.server)
         # For Temperature
         self.DGW.W3.setTemperatureValue(self.config_window.server)
-        # For Temperature
+        # For Depth
         self.DGW.W4.setDepthValue(self.config_window.server)
         # print("Data Updated")
     
