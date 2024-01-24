@@ -3,5 +3,5 @@
 
 For utils.Map.py
 line 32: 
-self.server_process = subprocess.Popen(["python3", "-m", "http.server", "8000"])
-Chnage python3 to python, if can not run
+self.server_process = subprocess.Popen(["python", "-m", "http.server", "8000"])
+Change python to python3, if can not run

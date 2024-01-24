@@ -96,6 +96,8 @@ class Overlayed_W(MapDisplay):
     def closeEvent(self, event):
             # Perform any additional cleanup here if needed
             self.stop_server()
+            self.config_window.close()
+            self.view_window.close()
             event.accept()  # Allow the window to close
 
     # To update data
@@ -131,8 +133,11 @@ class Overlayed_W(MapDisplay):
     # Some if else for SLAM start or stop or pause
         self.SI.setText("SLAM: Null")
 
-    #For Camera
+    # For Camera
         self.Cam.Cam_update_position_Widgets()
+
+    # For hide and show
+        ViewWindow.update_view(self,self.view_window)
 
 if __name__ == "__main__":
     app = QApplication([])

@@ -57,7 +57,7 @@ class WaveHR(QWidget):
             new_value = server.HR
 
         # Label
-        self.label.setText(f"Heart Rate: {new_value}")
+        self.label.setText(f"Heart Rate: {new_value} BPM")
 
         # Graph
         self.x1 = self.x1[1:]
