@@ -104,15 +104,10 @@ class Overlayed_W(MapDisplay):
     def update_data(self):
 
     # For Lat & Long
-        Lat = str(1.446188)
-        Long = str(103.784179)
-        self.LLL.setText("Lat: " + Lat + " | Long: " + Long)
+        MapDisplay.update_LL(self,self.config_window.server)
 
     # For Compass and Direction Label
-        x=str(47)
-        y=47
-        self.Compass.L1.setText("Direction: " + x)
-        self.Compass.W1.setAngle(y)
+        self.Compass.update_Deg(self.config_window.server)
 
     # For Data Graphs
         # For Heart Rate

@@ -204,9 +204,11 @@ class Talker:
                         data = data.decode('utf-8')
                         data = data.replace("'","\"")
                         l_str = json.loads(data)
-                        self.x = l_str[0]
-                        self.y = l_str[1]
-                        self.deg = l_str[2]
+                        self.Lat = l_str[0] # Lat
+                        self.LatD = l_str[1] # Lat direction
+                        self.Long = l_str[2] # Long 
+                        self.LongD = l_str[3] # Long direction
+                        self.deg = l_str[4] # Direction, Ground heading (take true north as the reference datum, clockwise)
                         if not data:
                                 break
 

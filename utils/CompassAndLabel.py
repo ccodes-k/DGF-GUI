@@ -35,3 +35,12 @@ class CompassDisplay(QWidget):
 
         main_layout = QVBoxLayout(self)
         main_layout.addWidget(container)
+    
+    def update_Deg(self, server):
+        if server is None:
+            Deg = 0
+        else: 
+            Deg = server.deg
+
+            self.L1.setText("Direction: " + str(Deg) + " °")
+            self.W1.setAngle(int(Deg))
