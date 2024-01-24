@@ -9,6 +9,7 @@ from pathlib import Path
 import argparse
 import math
 import json
+import socket
 
 import warnings
 
@@ -177,7 +178,7 @@ class Talker:
                 # print(temp)
 
 
-    def show_GPS(self, port='5559'):
+    def show_GPS(self):
         '''
                 Communication with GPS
 
@@ -187,11 +188,27 @@ class Talker:
                 output:
                         None
         '''
-        socket5 = init_socket(self.IP, port)
-        while True:
-                socket5.send_string('read5')
-                GPS = socket5.recv_string()
-                print(GPS)
+        HOST = '192.168.0.100'
+
+        PORT = 65432
+
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                s.bind((HOST, PORT))
+                s.listen()
+        print("Server created")
+        conn, addr = s.accept()
+        with conn:
+                print(f"Connected by {addr}")
+                while True:
+                        data = conn.recv(1024)
+                        data = data.decode('utf-8')
+                        data = data.replace("'","\"")
+                        l_str = json.loads(data)
+                        self.x = l_str[0]
+                        self.y = l_str[1]
+                        self.deg = l_str[2]
+                        if not data:
+                                break
 
     def show_depth(self, port='5560'):
         '''
