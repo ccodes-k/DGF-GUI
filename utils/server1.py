@@ -10,8 +10,8 @@ import argparse
 import math
 import json
 import socket
-
 import warnings
+import subprocess
 
 try:
         from utils.Comms import getnewlatlong, init_socket
@@ -75,6 +75,9 @@ class Talker:
         self.use_ros = use_ros
 
         self.play = True
+
+        self.slam_SS = "Null"
+        self.slam_PP = True
 
         if self.use_ros:
                self.ros_talker = ROS_Talker()
@@ -252,21 +255,45 @@ class Talker:
                 self.HR = int(float(data[0][1]))
                 self.SpO2 = int(float(data[1][1]))
 
+    def start_slam(self):
+        '''
+        Start SLAM
+        '''
+        self.slam_SS = "start"
+        # Check if a previous process is running and terminate it
+        if hasattr(self, 'ros_process') and self.ros_process is not None and self.ros_process.poll() is None:
+            self.ros_process.terminate()
+            self.ros_process.wait()
+
+        # Start a new SLAM process
+        self.ros_process = subprocess.Popen(["roslaunch", "orb_slam3_ros", "euroc_stereo.launch"])
+
+    def stop_slam(self):
+        '''
+        Stop SLAM
+        '''
+        self.slam_SS = "stop"
+        # Check if a process is running and terminate it
+        if hasattr(self, 'ros_process') and self.ros_process is not None and self.ros_process.poll() is None:
+            self.ros_process.terminate()
+            self.ros_process.wait()
+
 
     def pause_slam(self):
            '''
                 Pause SLAM
            '''
-           if self.use_ros:
-                  self.ros_talker.pause = self.ros_talker.pause == False
+        
+           self.slam_PP = not self.slam_PP
+           self.pause_state = not self.pause_state
+
+           print("out_Pause = " + str(self.pause_state))
+           
+           if self.use_ros and self.ros_talker:
+                self.ros_talker.set_pause_state(self.pause_state)
+                print("in_Pause = " + str(self.pause_state))
            else: 
                   warnings.warn("NO ROS FOUND!")
-
-    def stop(self):
-           '''
-                Program stop handler
-           '''
-           self.play = False
 
 def Runner(image = False, temperature = False, GPS=False, depth=False, heartrate=False):
         Talker_helper = Talker(IP_addr='169.254.211.41')

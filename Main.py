@@ -10,6 +10,7 @@ from src.Config_GUI import ConfigWindow
 import src.FloatingWidgets as FloatingW
 
 from utils.Map import MapDisplay
+from utils.server1 import Talker
 
 class Overlayed_W(MapDisplay):
     def __init__(self, parent=None):
@@ -40,14 +41,21 @@ class Overlayed_W(MapDisplay):
         self.Compass = FloatingW.Com_Floating_Widget(parent=self)
 
     # SLAM Buttons:
+
         # SLAM indicator
-        self.SI = FloatingW.SI_Floating_Button(parent=self, text="SLAM: Stop")
+        self.SI = FloatingW.SI_Floating_Button(parent=self, text="SLAM: Null")
         
+    
+        self.talker_instatnce = Talker()
+
         # Start & Stop Button
         self.StartB = FloatingW.Slam_Floating_Button(parent=self, text="Start")
+        self.StartB.clicked.connect(self.talker_instatnce.start_slam)
+
 
         # Play & Pause Button
-        self.PlayB = FloatingW.Slam_Floating_Button(parent=self, text="Play")
+        self.PlayB = FloatingW.Slam_Floating_Button(parent=self, text="Pause")
+        self.PlayB.clicked.connect(self.talker_instatnce.pause_slam)
     
     # Data Graphs
         self.DGW = FloatingW.Data_Floating_Widget(parent=self)
@@ -102,6 +110,25 @@ class Overlayed_W(MapDisplay):
 
     # To update data
     def update_data(self):
+    # For SLAM
+        if self.talker_instatnce.slam_SS == "start":
+             self.SI.setText("SLAM: Start")
+             self.StartB.setText("Stop")
+             self.StartB.clicked.disconnect()
+             self.StartB.clicked.connect(self.talker_instatnce.stop_slam)
+        
+        if self.talker_instatnce.slam_SS == "stop":
+             self.SI.setText("SLAM: Stop")
+             self.StartB.setText("Start")
+             self.StartB.clicked.disconnect()
+             self.StartB.clicked.connect(self.talker_instatnce.start_slam)
+        
+        if self.talker_instatnce.slam_PP == False:
+             self.SI.setText("SLAM: Pause")
+             self.PlayB.setText("Play")
+             
+        if self.talker_instatnce.slam_PP == True:
+             self.PlayB.setText("Pause")
 
     # For Lat & Long
         MapDisplay.update_LL(self,self.config_window.server)
