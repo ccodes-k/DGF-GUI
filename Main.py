@@ -106,6 +106,7 @@ class Overlayed_W(MapDisplay):
             self.stop_server()
             self.config_window.close()
             self.view_window.close()
+            self.talker_instatnce.stop_slam()
             event.accept()  # Allow the window to close
 
     # To update data
@@ -150,10 +151,6 @@ class Overlayed_W(MapDisplay):
     # For Diver Status
     # so the label will be Null, Safe or Danger
         self.DiverStatus.update_status(self.config_window.server)
-
-    # For SLAM indicator
-    # Some if else for SLAM start or stop or pause
-        self.SI.setText("SLAM: Null")
 
     # For Camera
         self.Cam.Cam_update_position_Widgets()
