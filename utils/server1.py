@@ -288,21 +288,21 @@ class Talker:
             self.ros_process.wait()
 
 
-#     def pause_slam(self):
-#            '''
-#                 Pause SLAM
-#            '''
+    def pause_slam(self):
+           '''
+                Pause SLAM
+           '''
         
-#            self.slam_PP = not self.slam_PP
-#            self.pause_state = not self.pause_state
+           self.slam_PP = not self.slam_PP
+           self.pause_state = not self.pause_state
 
-#            print("out_Pause = " + str(self.pause_state))
+           print("out_Pause = " + str(self.pause_state))
            
-#            if self.use_ros and self.ros_talker:
-#                 self.ros_talker.set_pause_state(self.pause_state)
-#                 print("in_Pause = " + str(self.pause_state))
-#            else: 
-#                   warnings.warn("NO ROS FOUND!")
+           if self.use_ros and self.ros_talker:
+                self.ros_talker.set_pause_state(self.pause_state)
+                print("in_Pause = " + str(self.pause_state))
+           else: 
+                  warnings.warn("NO ROS FOUND!")
 
 def Runner(image = False, temperature = False, GPS=False, depth=False, heartrate=False):
         Talker_helper = Talker(IP_addr='169.254.211.41')
