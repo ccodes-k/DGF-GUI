@@ -30,7 +30,7 @@ class MapDisplay(QWidget):
     def start_server(self):
         # code to start server
         # if not work, try change "python" to "python3"
-        self.server_process = subprocess.Popen(["python", "-m", "http.server", "8000"])
+        self.server_process = subprocess.Popen(["python3", "-m", "http.server", "8000"])
         print("Server started successfully.")
         self.web_view.page().profile().clearAllVisitedLinks()  # Clear entire browser cache
         time.sleep(1)
@@ -40,7 +40,9 @@ class MapDisplay(QWidget):
             self.server_process.terminate()
             self.server_process.wait()
             print("Server process terminated.")
-        
+    
+    # To update LL Label & LL.txt
+    # LL is lat and long
     def update_LL(self, server):
         if server is None:
             Lat = 0
