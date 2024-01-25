@@ -39,20 +39,3 @@ class MapDisplay(QWidget):
             self.server_process.terminate()
             self.server_process.wait()
             print("Server process terminated.")
-        
-    def update_LL(self, server):
-        if server is None:
-            Lat = 0
-            Long = 0
-        else: 
-            Lat = float(server.Lat[0-1]) + ( float(server.Lat[2-8]) / 60)
-            Long = float(server.Long[0-2]) + ( float(server.Long[3-9]) / 60)
-            LatD = server.LatD
-            LongD = server.LongD
-
-            with open('/assets/ReadFiles/lat_long.txt', 'w') as f:
-                LL_str = Lat + " " + Long
-                f.write(LL_str)
-                f.flush
-            
-            self.LLL.setText("Lat: " + Lat + " " + LatD + " | Long: " + Long + " " + LongD)
