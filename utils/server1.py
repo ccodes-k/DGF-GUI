@@ -71,6 +71,13 @@ class Talker:
         self.SpO2 = 0
         self.temp = 0
         self.depth = 0
+        self.Lat = 0
+        self.LatD = 0
+        self.Long =  0
+        self.LongD = 0
+        self.deg = 0
+        self.x = 0
+        self.y = 0
 
         self.use_ros = use_ros
 
@@ -198,22 +205,24 @@ class Talker:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                 s.bind((HOST, PORT))
                 s.listen()
-        print("Server created")
-        conn, addr = s.accept()
-        with conn:
-                print(f"Connected by {addr}")
-                while True:
-                        data = conn.recv(1024)
-                        data = data.decode('utf-8')
-                        data = data.replace("'","\"")
-                        l_str = json.loads(data)
-                        self.Lat = l_str[0] # Lat
-                        self.LatD = l_str[1] # Lat direction
-                        self.Long = l_str[2] # Long 
-                        self.LongD = l_str[3] # Long direction
-                        self.deg = l_str[4] # Direction, Ground heading (take true north as the reference datum, clockwise)
-                        if not data:
-                                break
+                print("Server created")
+                conn, addr = s.accept()
+                with conn:
+                        print(f"Connected by {addr}")
+                        while True:
+                                data = conn.recv(1024)
+                                data = data.decode('utf-8')
+                                data = data.replace("'","\"")
+                                l_str = json.loads(data)
+                                self.Lat = float(l_str[0][0:2]) # Lat
+                                self.x = float(l_str[0][2:-1])
+                                self.LatD = l_str[1] # Lat direction
+                                self.Long = float(l_str[2][0:3]) # Long
+                                self.y = float(l_str[2][3:-1])
+                                self.LongD = l_str[3] # Long direction
+                                self.deg = float(l_str[4]) # Direction, Ground heading (take true north as the reference datum, clockwise)
+                                if not data:
+                                        continue
 
     def show_depth(self, port='5560'):
         '''
