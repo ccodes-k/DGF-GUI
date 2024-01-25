@@ -132,7 +132,7 @@ class Overlayed_W(MapDisplay):
              self.PlayB.setText("Pause")
 
     # For Lat & Long
-        self.LLL.update_LL(self,self.config_window.server)
+        MapDisplay.update_LL(self,self.config_window.server)
 
     # For Compass and Direction Label
         self.Compass.update_Deg(self.config_window.server)

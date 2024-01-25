@@ -11,8 +11,6 @@ from utils.DataGraphs import DataDisplay
 
 from utils.Camera import CameraW
 
-from utils.LL import update_LT
-
 # Option Buttons
 class Ob_Floating_Button(QPushButton):
     def __init__(self, parent, text=""):
@@ -69,9 +67,6 @@ class LL_Floating_Widget(QLabel):
         x = ((parent_width - self.width()) // 4) * 3
         y = self.paddingTop
         self.setGeometry(x, y, 360, 40)
-    
-    def update_LL(self, server):
-        update_LT(self, server)
 
 # Compass
 class Com_Floating_Widget(CompassDisplay): 

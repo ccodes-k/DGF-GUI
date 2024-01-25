@@ -6,6 +6,7 @@ import time
 from PyQt5.QtCore import QUrl
 from PyQt5.QtWidgets import QVBoxLayout, QWidget
 from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEngineSettings
+from utils.server1 import Talker
 
 class MapDisplay(QWidget):
     def __init__(self, parent=None):
@@ -39,3 +40,24 @@ class MapDisplay(QWidget):
             self.server_process.terminate()
             self.server_process.wait()
             print("Server process terminated.")
+    
+    # To update LL Label & LL.txt
+    # LL is lat and long
+    def update_LL(self, server):
+            if server is None:
+                Lat = 0
+                Long = 0
+                LatD = 0
+                LongD = 0
+            else: 
+                Lat = float(server.Lat[0-1]) + ( float(server.Lat[2-8]) / 60)
+                Long = float(server.Long[0-2]) + ( float(server.Long[3-9]) / 60)
+                LatD = server.LatD
+                LongD = server.LongD
+
+                with open('/assets/ReadFiles/lat_long.txt', 'w') as f:
+                    LL_str = Lat + " " + Long
+                    f.write(LL_str)
+                    f.flush
+                
+                self.LLL.setText("Lat: " + Lat + " " + LatD + " | Long: " + Long + " " + LongD)
