@@ -5,7 +5,7 @@ import pyqtgraph as pg
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
-from utils.server import Talker
+from utils.server1 import Talker
 import time 
 
 class WaveHR(QWidget):
