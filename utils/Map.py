@@ -1,6 +1,7 @@
 # create map from index.html
 # create server so the map can fetch (read) the txt live
 
+import math
 import subprocess
 import time
 from PyQt5.QtCore import QUrl
@@ -44,6 +45,8 @@ class MapDisplay(QWidget):
     # To update LL Label & LL.txt
     # LL is lat and long
     def update_LL(self, server):
+            r_earth = 6378137  # Earth radius
+
             if server is None:
                 Lat = 0
                 Long = 0
@@ -55,9 +58,20 @@ class MapDisplay(QWidget):
                 LatD = server.LatD
                 LongD = server.LongD
 
-                with open('/assets/ReadFiles/lat_long.txt', 'w') as f:
-                    LL_str = Lat + " " + Long
-                    f.write(LL_str)
-                    f.flush
+                with open('/assets/ReadFiles/tx_ty.txt', 'r') as f1:
+                    content = f1.read()
+                    # Split the content into two values using space as a delimiter
+                    tx, ty = content.split()
+                    # Convert the values to the appropriate data type
+                    tx = float(tx)
+                    ty = float(ty)
+
+                nLat = (Lat + (tx / r_earth) * (180 / math.pi))
+                nLong = (Long + (ty / r_earth) * (180 / math.pi) / math.cos(Lat * math.pi / 180))
+
+                with open('/assets/ReadFiles/lat_long.txt', 'w') as f2:
+                    LL_str = nLat + " " + nLong
+                    f2.write(LL_str)
+                    f2.flush
                 
-                self.LLL.setText("Lat: " + Lat + " " + LatD + " | Long: " + Long + " " + LongD)
+                self.LLL.setText("Lat: " + nLat + " " + LatD + " | Long: " + nLong + " " + LongD)
