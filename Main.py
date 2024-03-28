@@ -45,13 +45,11 @@ class Overlayed_W(MapDisplay):
         # SLAM indicator
         self.SI = FloatingW.SI_Floating_Button(parent=self, text="SLAM: Null")
         
-    
         self.talker_instatnce = Talker()
 
         # Start & Stop Button
         self.StartB = FloatingW.Slam_Floating_Button(parent=self, text="Start")
         self.StartB.clicked.connect(self.talker_instatnce.start_slam)
-
 
         # Play & Pause Button
         self.PlayB = FloatingW.Slam_Floating_Button(parent=self, text="Pause")
@@ -91,8 +89,8 @@ class Overlayed_W(MapDisplay):
 
     # SLAM Buttons
         self.SI.SI_update_position_Buttons()
-        self.PlayB.Slam_update_position_Buttons(0)
-        self.StartB.Slam_update_position_Buttons(1)
+        self.PlayB.Slam_update_position_Buttons(1)
+        self.StartB.Slam_update_position_Buttons(0)
     
     # Data Graphs
         self.DGW.Data_update_position_Widgets()
@@ -101,6 +99,8 @@ class Overlayed_W(MapDisplay):
         self.Cam.Cam_update_position_Widgets()
     
     # close event for map, to close the server
+    # close event for view and config window
+    # close event for SLAM
     def closeEvent(self, event):
             # Perform any additional cleanup here if needed
             self.stop_server()
@@ -132,10 +132,10 @@ class Overlayed_W(MapDisplay):
              self.PlayB.setText("Pause")
 
     # For Lat & Long
-        MapDisplay.update_LL(self,self.config_window.server)
+        MapDisplay.update_LL()
 
     # For Compass and Direction Label
-        self.Compass.update_Deg(self.config_window.server)
+        self.Compass.update_Deg()
 
     # For Data Graphs
         # For Heart Rate

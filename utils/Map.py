@@ -7,7 +7,7 @@ import time
 from PyQt5.QtCore import QUrl
 from PyQt5.QtWidgets import QVBoxLayout, QWidget
 from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEngineSettings
-from utils.server1 import Talker
+from utils.GPS_data import SerialDataWriter
 
 class MapDisplay(QWidget):
     def __init__(self, parent=None):
@@ -28,6 +28,9 @@ class MapDisplay(QWidget):
         print(url.toLocalFile())
         self.web_view.setUrl(url)
 
+        # for GPS data
+        self.data_writer = SerialDataWriter()
+
     def start_server(self):
         # code to start server
         # if not work, try change "python" to "python3"
@@ -44,34 +47,40 @@ class MapDisplay(QWidget):
     
     # To update LL Label & LL.txt
     # LL is lat and long
-    def update_LL(self, server):
-            r_earth = 6378137  # Earth radius
+    def update_LL(self):
+        # get GPS data
+        self.data_writer.read_and_write_to_file()
 
-            if server is None:
-                Lat = 0
-                Long = 0
-                LatD = 0
-                LongD = 0
-            else: 
-                Lat = float(server.Lat[0-1]) + ( float(server.Lat[2-8]) / 60)
-                Long = float(server.Long[0-2]) + ( float(server.Long[3-9]) / 60)
-                LatD = server.LatD
-                LongD = server.LongD
+        r_earth = 6378137  # Earth radius
 
-                with open('/assets/ReadFiles/tx_ty.txt', 'r') as f1:
-                    content = f1.read()
-                    # Split the content into two values using space as a delimiter
-                    tx, ty = content.split()
-                    # Convert the values to the appropriate data type
-                    tx = float(tx)
-                    ty = float(ty)
-
-                nLat = (Lat + (tx / r_earth) * (180 / math.pi))
-                nLong = (Long + (ty / r_earth) * (180 / math.pi) / math.cos(Lat * math.pi / 180))
-
-                with open('/assets/ReadFiles/lat_long.txt', 'w') as f2:
-                    LL_str = nLat + " " + nLong
-                    f2.write(LL_str)
-                    f2.flush
+        with open('/assets/ReadFiles/LLD.txt', 'r') as f1:
+            content = f1.read()
+            # Extract values from the content
+            if len(content) >= 3:
+                # Latitude
+                lat_line = content[0].strip().split()
+                Lat = lat_line[0]
+                LatD = lat_line[1]
                 
-                self.LLL.setText("Lat: " + nLat + " " + LatD + " | Long: " + nLong + " " + LongD)
+                # Longitude
+                long_line = content[1].strip().split()
+                Long = long_line[0]
+                LongD = long_line[1]          
+
+        with open('/assets/ReadFiles/txty.txt', 'r') as f2:
+            content = f2.read()
+            # Split the content into two values using space as a delimiter
+            tx, ty = content.split()
+            # Convert the values to the appropriate data type
+            tx = float(tx)
+            ty = float(ty)
+
+        nLat = (Lat + (tx / r_earth) * (180 / math.pi))
+        nLong = (Long + (ty / r_earth) * (180 / math.pi) / math.cos(Lat * math.pi / 180))
+
+        with open('/assets/ReadFiles/RLL.txt', 'w') as f3:
+            LL_str = nLat + " " + nLong
+            f3.write(LL_str)
+            f3.flush
+        
+        self.LLL.setText("Lat: " + nLat + " " + LatD + " | Long: " + nLong + " " + LongD)
