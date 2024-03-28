@@ -2,7 +2,8 @@
 import serial
 
 class SerialDataWriter:
-    def __init__(self, port='COM3', baudrate=115200, timeout=0, parity=serial.PARITY_EVEN, rtscts=1):
+    # window: COM3  Ubuntu : /dev/ttyUSB0
+    def __init__(self, port='/dev/ttyUSB0', baudrate=115200, timeout=0, parity=serial.PARITY_EVEN, rtscts=1):
         """
         Initializes the SerialDataWriter object with specified serial port settings.
         """
