@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
-import re
-import time
 import rospy
+import sys
 from geometry_msgs.msg import PoseStamped
-import time
 
 def write(x, y):
-    with open('/assets/ReadFiles/tx_ty.txt', 'w') as file:
+    with open('/home/rp123/abc_GUI/Deep-Water-Diver-Tracker/assets/ReadFiles/txty.txt', 'w') as file:
         file.write(f'{x} {y}')
 
 def callback(data):
@@ -14,8 +12,7 @@ def callback(data):
     x = data.pose.position.x
     y = data.pose.position.y
 
-# Indexes are corrected below
-    tx = x # Appends second column
+    tx = x  # Appends second column
     ty = y  # Appends third column
     
     write(tx, ty)
@@ -27,11 +24,18 @@ def listener():
     rospy.Subscriber('/orb_slam3/camera_pose', PoseStamped, callback)
 
     try:
-        rospy.spin()
-    except KeyboardInterrupt:
-        print("Script terminated by user.")
+        while not rospy.is_shutdown():
+            # Check for keyboard input
+            print("Press 's' to stop the program:")
+            user_input = input("Input: ")
+            if user_input == "s":
+                print("Program stopped by user.")
+                break
+            
+            rospy.sleep(0.1)  # Sleep for a short duration to avoid busy loop
+            
+    except rospy.ROSInterruptException:
+        pass
 
 if __name__ == '__main__':
     listener()
-
-

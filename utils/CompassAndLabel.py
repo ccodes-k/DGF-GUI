@@ -37,7 +37,7 @@ class CompassDisplay(QWidget):
         main_layout.addWidget(container)
     
     def update_Deg(self):
-        with open('/assets/ReadFiles/LLD.txt', 'r') as f1:
+        with open('./assets/ReadFiles/LLD.txt', 'r') as f1:
             content = f1.read()
             # Extract values from the content
             if len(content) >= 3:

@@ -276,7 +276,7 @@ class Talker:
 
         # Start a new SLAM process
         self.ros_process = subprocess.Popen(["roslaunch", "orb_slam3_ros", "euroc_stereo.launch"])
-
+    
     def stop_slam(self):
         '''
         Stop SLAM

@@ -51,9 +51,9 @@ class Overlayed_W(MapDisplay):
         self.StartB = FloatingW.Slam_Floating_Button(parent=self, text="Start")
         self.StartB.clicked.connect(self.talker_instatnce.start_slam)
 
-        # Play & Pause Button
-        self.PlayB = FloatingW.Slam_Floating_Button(parent=self, text="Pause")
-        self.PlayB.clicked.connect(self.talker_instatnce.pause_slam)
+        # # Play & Pause Button - change to SLAMmtll
+        # self.PlayB = FloatingW.Slam_Floating_Button(parent=self, text="mtll")
+        # self.PlayB.clicked.connect(self.mtll_instance.start)
     
     # Data Graphs
         self.DGW = FloatingW.Data_Floating_Widget(parent=self)
@@ -70,6 +70,12 @@ class Overlayed_W(MapDisplay):
         self.timerM.setInterval(250)
         self.timerM.timeout.connect(self.update_data)
         self.timerM.start()
+
+    # hide temp and depth as not using
+        self.DGW.W3.hide()
+        self.view_window.b2.setChecked(False)
+        self.DGW.W4.hide()
+        self.view_window.b3.setChecked(False)
 
     def resizeEvent(self, event):
         super().resizeEvent(event)
@@ -117,22 +123,22 @@ class Overlayed_W(MapDisplay):
              self.StartB.setText("Stop")
              self.StartB.clicked.disconnect()
              self.StartB.clicked.connect(self.talker_instatnce.stop_slam)
-        
+
         if self.talker_instatnce.slam_SS == "stop":
              self.SI.setText("SLAM: Stop")
              self.StartB.setText("Start")
              self.StartB.clicked.disconnect()
              self.StartB.clicked.connect(self.talker_instatnce.start_slam)
-        
-        if self.talker_instatnce.slam_PP == False:
-             self.SI.setText("SLAM: Pause")
-             self.PlayB.setText("Play")
+
+        # if self.talker_instatnce.slam_PP == False:
+        #      self.SI.setText("SLAM: Pause")
+        #      self.PlayB.setText("Play")
              
-        if self.talker_instatnce.slam_PP == True:
-             self.PlayB.setText("Pause")
+        # if self.talker_instatnce.slam_PP == True:
+        #      self.PlayB.setText("Pause")
 
     # For Lat & Long
-        MapDisplay.update_LL()
+        MapDisplay.update_LL(self)
 
     # For Compass and Direction Label
         self.Compass.update_Deg()
@@ -143,9 +149,9 @@ class Overlayed_W(MapDisplay):
         # For SpO2
         self.DGW.W2.setSpO2Value(self.config_window.server)
         # For Temperature
-        self.DGW.W3.setTemperatureValue(self.config_window.server)
+        #self.DGW.W3.setTemperatureValue(self.config_window.server)
         # For Depth
-        self.DGW.W4.setDepthValue(self.config_window.server)
+        #self.DGW.W4.setDepthValue(self.config_window.server)
         # print("Data Updated")
     
     # For Diver Status

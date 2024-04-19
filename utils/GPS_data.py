@@ -1,4 +1,4 @@
-# using serial port to get GPS data
+# using serial port to get GPS data\
 import serial
 
 class SerialDataWriter:
@@ -9,7 +9,7 @@ class SerialDataWriter:
         """
         self.ser = serial.Serial(port, baudrate, timeout=timeout, parity=parity, rtscts=rtscts)
 
-    def read_and_write_to_file(self, filename='/assets/ReadFiles/LLD.txt'):
+    def read_and_write_to_file(self, filename='./assets/ReadFiles/LLD.txt'):
         """
         Reads latest data from the serial port and writes it to the specified file.
         :param filename: The name of the file to write the data to.
@@ -40,7 +40,7 @@ class SerialDataWriter:
                             f.flush
                         break  # Exit the loop once data is written to file
                 t = ""
-
+                
 # Example usage:
 # Create an instance of the SerialDataWriter class
 # data_writer = SerialDataWriter()

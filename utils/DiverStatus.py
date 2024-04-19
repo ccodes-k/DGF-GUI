@@ -68,7 +68,7 @@ class StatusLabel(QWidget):
             # Heart Rate
             hr = server.HR
             # Temperature
-            temp = server.temp
+            #temp = server.temp
             # SpO2
             spo2 = server.SpO2
 

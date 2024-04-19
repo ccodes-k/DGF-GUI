@@ -64,9 +64,9 @@ class LL_Floating_Widget(QLabel):
     # Top Center-Right
     def LL_update_position_Widgets(self):
         parent_width = self.parent().width()
-        x = ((parent_width - self.width()) // 4) * 3
+        x = ((parent_width - self.width()) // 4) * 3 + 80
         y = self.paddingTop
-        self.setGeometry(x, y, 360, 40)
+        self.setGeometry(x, y, 500, 40)
 
 # Compass
 class Com_Floating_Widget(CompassDisplay): 

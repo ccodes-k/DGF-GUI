@@ -53,21 +53,25 @@ class MapDisplay(QWidget):
 
         r_earth = 6378137  # Earth radius
 
-        with open('/assets/ReadFiles/LLD.txt', 'r') as f1:
-            content = f1.read()
-            # Extract values from the content
-            if len(content) >= 3:
+        with open('./assets/ReadFiles/LLD.txt', 'r') as f1:
+            lines = f1.readlines()
+            if len(lines) >= 3:
                 # Latitude
-                lat_line = content[0].strip().split()
-                Lat = lat_line[0]
-                LatD = lat_line[1]
-                
-                # Longitude
-                long_line = content[1].strip().split()
-                Long = long_line[0]
-                LongD = long_line[1]          
+                lat_line = lines[0].strip().split()
+                if len(lat_line) >= 2:
+                    Lat = lat_line[0]
+                    LatD = lat_line[1]
 
-        with open('/assets/ReadFiles/txty.txt', 'r') as f2:
+                # Longitude
+                long_line = lines[1].strip().split()
+                if len(long_line) >= 2:
+                    Long = long_line[0]
+                    LongD = long_line[1]
+        
+        Lat = float(Lat)
+        Long = float(Long)
+
+        with open('./assets/ReadFiles/txty.txt', 'r') as f2:
             content = f2.read()
             # Split the content into two values using space as a delimiter
             tx, ty = content.split()
@@ -78,7 +82,10 @@ class MapDisplay(QWidget):
         nLat = (Lat + (tx / r_earth) * (180 / math.pi))
         nLong = (Long + (ty / r_earth) * (180 / math.pi) / math.cos(Lat * math.pi / 180))
 
-        with open('/assets/ReadFiles/RLL.txt', 'w') as f3:
+        nLat = str(nLat)
+        nLong = str(nLong)
+
+        with open('./assets/ReadFiles/RLL.txt', 'w') as f3:
             LL_str = nLat + " " + nLong
             f3.write(LL_str)
             f3.flush
