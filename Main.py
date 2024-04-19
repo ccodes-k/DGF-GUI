@@ -11,6 +11,7 @@ import src.FloatingWidgets as FloatingW
 
 from utils.Map import MapDisplay
 from utils.server1 import Talker
+from utils.GPS_data import SerialDataWriter
 
 class Overlayed_W(MapDisplay):
     def __init__(self, parent=None):
@@ -60,6 +61,11 @@ class Overlayed_W(MapDisplay):
     
     # Camera
         self.Cam = FloatingW.Cam_Floating_Widget(parent=self, server =self.config_window)
+    
+    # for GPS data
+        self.data_writer = SerialDataWriter()
+        # get GPS data
+        self.data_writer.read_and_write_to_file()
 
     # For map server
         # Connect the closeEvent of the main window to the stop_server method
@@ -95,7 +101,7 @@ class Overlayed_W(MapDisplay):
 
     # SLAM Buttons
         self.SI.SI_update_position_Buttons()
-        self.PlayB.Slam_update_position_Buttons(1)
+        # self.PlayB.Slam_update_position_Buttons(1)
         self.StartB.Slam_update_position_Buttons(0)
     
     # Data Graphs

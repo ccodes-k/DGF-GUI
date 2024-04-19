@@ -7,7 +7,6 @@ import time
 from PyQt5.QtCore import QUrl
 from PyQt5.QtWidgets import QVBoxLayout, QWidget
 from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEngineSettings
-from utils.GPS_data import SerialDataWriter
 
 class MapDisplay(QWidget):
     def __init__(self, parent=None):
@@ -28,9 +27,6 @@ class MapDisplay(QWidget):
         print(url.toLocalFile())
         self.web_view.setUrl(url)
 
-        # for GPS data
-        self.data_writer = SerialDataWriter()
-
     def start_server(self):
         # code to start server
         # if not work, try change "python" to "python3"
@@ -48,9 +44,6 @@ class MapDisplay(QWidget):
     # To update LL Label & LL.txt
     # LL is lat and long
     def update_LL(self):
-        # get GPS data
-        self.data_writer.read_and_write_to_file()
-
         r_earth = 6378137  # Earth radius
 
         with open('./assets/ReadFiles/LLD.txt', 'r') as f1:

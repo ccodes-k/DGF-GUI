@@ -1,4 +1,4 @@
-# using serial port to get GPS data\
+# using serial port to get GPS data
 import serial
 
 class SerialDataWriter:
@@ -40,7 +40,7 @@ class SerialDataWriter:
                             f.flush
                         break  # Exit the loop once data is written to file
                 t = ""
-                
+
 # Example usage:
 # Create an instance of the SerialDataWriter class
 # data_writer = SerialDataWriter()
