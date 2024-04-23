@@ -88,15 +88,23 @@ class Overlayed_W(MapDisplay):
         self.DGW.W4.hide()
         self.view_window.b3.setChecked(False)
     
-    # Instantiate HeartRateMonitor
-        self.heart_rate_monitor = HeartRateMonitor("a0:9e:1a:c3:53:b9")  # Replace with your device address
+    # Initialize HeartRateMonitor instance
+        self.hr_monitor = HeartRateMonitor("a0:9e:1a:c3:53:b9")  # Replace with your BLE device address
 
         # Start heart rate monitoring process asynchronously
         self.start_hr_monitoring()
 
+        # Create a QTimer to periodically process PyQt events
+        self.timer = QtCore.QTimer(self)
+        self.timer.timeout.connect(self.process_events)
+        self.timer.start(100)  # Process events every 100 milliseconds
+
     def start_hr_monitoring(self):
-        # Run HeartRateMonitor's monitoring process
-        asyncio.create_task(self.hr_monitor.run())
+        asyncio.ensure_future(self.hr_monitor.run())
+
+    def process_events(self):
+        # Allow PyQt event loop to process pending events
+        QtCore.QCoreApplication.processEvents()
 
     def resizeEvent(self, event):
         super().resizeEvent(event)
