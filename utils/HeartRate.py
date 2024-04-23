@@ -50,7 +50,11 @@ class WaveHR(QWidget):
         self.data_line = self.plotWidget.plot(self.x1, self.y1, pen=pen)
     
     # using Bluetooth heart rate sensor
-    def updateWaveHR(self, new_value):
+    def updateWaveHR(self):
+
+        with open('./assets/ReadFiles/HR.txt', 'r') as f:
+            content = f.read()
+            new_value = int(content)
 
         # Label
         self.label.setText(f"Heart Rate: {new_value} BPM")

@@ -14,23 +14,13 @@ from utils.server1 import Talker
 from utils.GPS_data import SerialDataWriter
 
 import asyncio
-from utils.HR_BT import HeartRateMonitor
+from utils.HR_BT import HeartRateMonitor  # Import the HeartRateMonitor class
 
 class Overlayed_W(MapDisplay):
     def __init__(self, parent=None):
         super(Overlayed_W, self).__init__(parent)
         self.setWindowTitle("Diver Monitor")
-    
-     # Initialize HeartRateMonitor instance
-        self.hr_monitor = HeartRateMonitor()
-        self.hr_monitor.hr_updated.connect(self.handle_hr_update)  # Connect signal to handler
 
-        # Initialize self.value_a to None
-        self.value_a = 0
-
-        # Start heart rate monitoring in a separate coroutine
-        self.start_hr_monitoring()
-    
     # Option Buttons:
 
         # Config Button
@@ -97,6 +87,11 @@ class Overlayed_W(MapDisplay):
         self.view_window.b2.setChecked(False)
         self.DGW.W4.hide()
         self.view_window.b3.setChecked(False)
+    
+    # For BT HR
+        self.address = "a0:9e:1a:c3:53:b9"  # Bluetooth device address
+        self.hr_monitor = HeartRateMonitor(self.address)  # Create an instance of HeartRateMonitor
+        self.run_hr_monitor()  # Start heart rate monitoring when Overlayed_W instance is created
 
     def resizeEvent(self, event):
         super().resizeEvent(event)
@@ -136,22 +131,6 @@ class Overlayed_W(MapDisplay):
             self.talker_instatnce.stop_slam()
             event.accept()  # Allow the window to close
 
-    # for BT HR
-    def handle_hr_update(self, hr_val):
-        # This method is called whenever a new heart rate value is received
-        print(f"Received HR Value: {hr_val}")
-        # You can store or use hr_val as needed in your application
-        self.value_a = hr_val  # Example: Assign hr_val to self.value_a
-
-    def start_hr_monitoring(self):
-        loop = asyncio.get_event_loop()
-        loop.create_task(self.hr_monitor.run_HR("a0:9e:1a:c3:53:b9"))  # Start heart rate monitoring
-
-        # Create a QTimer to periodically check for asyncio tasks
-        timer = QtCore.QTimer(self)
-        timer.timeout.connect(lambda: loop.create_task(asyncio.sleep(0)))  # Trigger event loop
-        timer.start(100)  # Start the timer with an interval of 100 ms
-
     # To update data
     def update_data(self):
     # For SLAM
@@ -182,7 +161,7 @@ class Overlayed_W(MapDisplay):
 
     # For Data Graphs
         # For Heart Rate
-        self.DGW.W1.updateWaveHR(self.value_a)
+        self.DGW.W1.updateWaveHR()
         # For SpO2
         # self.DGW.W2.setSpO2Value(self.config_window.server)
         # For Temperature
@@ -200,6 +179,22 @@ class Overlayed_W(MapDisplay):
 
     # For hide and show
         ViewWindow.update_view(self,self.view_window)
+
+    async def start_hr_monitoring(self):
+        """Start heart rate monitoring asynchronously."""
+        try:
+            await self.hr_monitor.start_monitoring()
+        except Exception as e:
+            print(f"Error starting heart rate monitoring: {e}")
+
+    def stop_hr_monitoring(self):
+        """Stop heart rate monitoring."""
+        self.hr_monitor.stop_monitoring()
+
+    def run_hr_monitor(self):
+        """Run heart rate monitoring coroutine."""
+        asyncio.create_task(self.start_hr_monitoring())  # Start heart rate monitoring in a background task
+
 
 if __name__ == "__main__":
     app = QApplication([])
