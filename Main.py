@@ -13,10 +13,17 @@ from utils.Map import MapDisplay
 from utils.server1 import Talker
 from utils.GPS_data import SerialDataWriter
 
+import asyncio
+from utils.HR_BT import HeartRateMonitor
+
 class Overlayed_W(MapDisplay):
     def __init__(self, parent=None):
         super(Overlayed_W, self).__init__(parent)
         self.setWindowTitle("Diver Monitor")
+    
+     # Initialize HeartRateMonitor instance
+        self.hr_monitor = HeartRateMonitor()
+        self.hr_monitor.hr_updated.connect(self.handle_hr_update)  # Connect signal to handler
 
     # Option Buttons:
 
@@ -123,6 +130,13 @@ class Overlayed_W(MapDisplay):
             self.talker_instatnce.stop_slam()
             event.accept()  # Allow the window to close
 
+    # for BT HR
+    def handle_hr_update(self, hr_val):
+        # This method is called whenever a new heart rate value is received
+        print(f"Received HR Value: {hr_val}")
+        # You can store or use hr_val as needed in your application
+        self.value_a = hr_val  # Example: Assign hr_val to self.value_a
+
     # To update data
     def update_data(self):
     # For SLAM
@@ -153,7 +167,7 @@ class Overlayed_W(MapDisplay):
 
     # For Data Graphs
         # For Heart Rate
-        self.DGW.W1.updateWaveHR(self.config_window.server)
+        self.DGW.W1.updateWaveHR(self.value_a)
         # For SpO2
         # self.DGW.W2.setSpO2Value(self.config_window.server)
         # For Temperature
@@ -176,4 +190,8 @@ if __name__ == "__main__":
     app = QApplication([])
     window = Overlayed_W()
     window.showMaximized()
+
+    # Start heart rate monitoring asynchronously
+    asyncio.run(window.hr_monitor.run_HR("a0:9e:1a:c3:53:b9"))
+
     sys.exit(app.exec_())
