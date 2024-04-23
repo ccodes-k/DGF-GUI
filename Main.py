@@ -25,6 +25,9 @@ class Overlayed_W(MapDisplay):
         self.hr_monitor = HeartRateMonitor()
         self.hr_monitor.hr_updated.connect(self.handle_hr_update)  # Connect signal to handler
 
+        # Start heart rate monitoring in a separate coroutine
+        self.start_hr_monitoring()
+    
     # Option Buttons:
 
         # Config Button
@@ -142,9 +145,14 @@ class Overlayed_W(MapDisplay):
         # You can store or use hr_val as needed in your application
         self.value_a = hr_val  # Example: Assign hr_val to self.value_a
 
-    async def start_hr_monitoring(self):
-        # Start heart rate monitoring asynchronously
-        await self.hr_monitor.run_HR("a0:9e:1a:c3:53:b9")
+    def start_hr_monitoring(self):
+        loop = asyncio.get_event_loop()
+        loop.create_task(self.hr_monitor.run_HR("a0:9e:1a:c3:53:b9"))  # Start heart rate monitoring
+
+        # Create a QTimer to periodically check for asyncio tasks
+        timer = QtCore.QTimer(self)
+        timer.timeout.connect(lambda: loop.create_task(asyncio.sleep(0)))  # Trigger event loop
+        timer.start(100)  # Start the timer with an interval of 100 ms
 
     # To update data
     def update_data(self):
@@ -199,8 +207,4 @@ if __name__ == "__main__":
     app = QApplication([])
     window = Overlayed_W()
     window.showMaximized()
-
-    # Start heart rate monitoring coroutine in the background
-    asyncio.create_task(window.start_hr_monitoring())
-
     sys.exit(app.exec_())
