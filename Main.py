@@ -83,6 +83,11 @@ class Overlayed_W(MapDisplay):
         self.timerM.setInterval(250)
         self.timerM.timeout.connect(self.update_data)
         self.timerM.start()
+    
+    # Setup QTimer to periodically process events (every 10 ms) for BT HR
+        self.timer = QtCore.QTimer(self)
+        self.timer.timeout.connect(self.process_events)
+        self.timer.start(500)  # Milliseconds
 
     # hide temp and depth as not using
         self.DGW.W2.hide()
@@ -136,6 +141,11 @@ class Overlayed_W(MapDisplay):
         print(f"Received HR Value: {hr_val}")
         # You can store or use hr_val as needed in your application
         self.value_a = hr_val  # Example: Assign hr_val to self.value_a
+
+    def process_events(self):
+        # Manually process PyQt5 events to keep the GUI responsive
+        loop = QtCore.QEventLoop()
+        loop.processEvents()
 
     # To update data
     def update_data(self):
@@ -192,6 +202,6 @@ if __name__ == "__main__":
     window.showMaximized()
 
     # Start heart rate monitoring asynchronously
-    asyncio.run(window.hr_monitor.run_HR("a0:9e:1a:c3:53:b9"))
+    asyncio.create_task(window.hr_monitor.run_HR("a0:9e:1a:c3:53:b9"))
 
     sys.exit(app.exec_())
