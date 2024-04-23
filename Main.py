@@ -78,6 +78,8 @@ class Overlayed_W(MapDisplay):
         self.timerM.start()
 
     # hide temp and depth as not using
+        self.DGW.W2.hide()
+        self.view_window.b10.setChecked(False)
         self.DGW.W3.hide()
         self.view_window.b2.setChecked(False)
         self.DGW.W4.hide()
@@ -153,7 +155,7 @@ class Overlayed_W(MapDisplay):
         # For Heart Rate
         self.DGW.W1.updateWaveHR(self.config_window.server)
         # For SpO2
-        self.DGW.W2.setSpO2Value(self.config_window.server)
+        # self.DGW.W2.setSpO2Value(self.config_window.server)
         # For Temperature
         #self.DGW.W3.setTemperatureValue(self.config_window.server)
         # For Depth

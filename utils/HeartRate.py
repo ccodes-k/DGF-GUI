@@ -5,13 +5,20 @@ import pyqtgraph as pg
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
-from utils.server1 import Talker
-import time 
+# from utils.server1 import Talker
+
+import asyncio
+from utils.HR_BT import HRMonitor
 
 class WaveHR(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.initUI()
+        self.hr_monitor = HRMonitor("a0:9e:1a:c3:53:b9")
+        asyncio.ensure_future(self.connect_to_hr_monitor())
+    
+    async def connect_to_hr_monitor(self):
+        await self.hr_monitor.connect()
 
     def initUI(self):
         layout = QVBoxLayout(self)
@@ -49,12 +56,12 @@ class WaveHR(QWidget):
         # Create a red waveform
         pen = pg.mkPen(color=(255, 0, 0))
         self.data_line = self.plotWidget.plot(self.x1, self.y1, pen=pen)
-
-    def updateWaveHR(self,server):
-        if server is None:
-           new_value = 0
-        else:
-            new_value = server.HR
+    
+    # using Bluetooth heart rate sensor
+    def updateWaveHR(self):
+        
+        # Get the latest heart rate value
+        new_value = self.hr_monitor.get_hr_value()
 
         # Label
         self.label.setText(f"Heart Rate: {new_value} BPM")
@@ -70,6 +77,28 @@ class WaveHR(QWidget):
         
         # Adjust the y-axis range of the plot widget to focus on the latest heart rate value
         self.plotWidget.setYRange(min(self.y1) - 5, max(self.y1) + 5, padding=0)
+
+    # using server
+    # def updateWaveHR(self,server):
+    #     if server is None:
+    #        new_value = 0
+    #     else:
+    #         new_value = server.HR
+
+    #     # Label
+    #     self.label.setText(f"Heart Rate: {new_value} BPM")
+
+    #     # Graph
+    #     self.x1 = self.x1[1:]
+    #     self.x1.append(self.x1[-1] + 1)
+    #     self.y1 = self.y1[1:]
+    #     self.y1.append(int(new_value))
+        
+    #     # Update the data of the plotted waveform
+    #     self.data_line.setData(self.x1, self.y1)
+        
+    #     # Adjust the y-axis range of the plot widget to focus on the latest heart rate value
+    #     self.plotWidget.setYRange(min(self.y1) - 5, max(self.y1) + 5, padding=0)
 
 # Example usage:
 # parent_widget = QWidget()

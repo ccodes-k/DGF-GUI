@@ -5,7 +5,7 @@ import pyqtgraph as pg
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
-from utils.server import Talker
+# from utils.server import Talker
 
 class OneVerlineO(QWidget):
     def __init__(self, parent=None):
@@ -54,16 +54,26 @@ class OneVerlineO(QWidget):
         # Update the existing line with the current SpO2 value
         self.line.setValue(self.Ov)
 
-    def setSpO2Value(self, server):
+    # using Bluetooth heart rate sensor
+    def setSpO2Value(self, new_value):
         # Set a new SpO2 value and update the vertical line
-        if server is None:
-           new_value = 0
-        else: 
-            new_value = server.SpO2
+        true_value = 1
         #Label
-        self.label.setText(f"SpO2: {new_value} %")
+        self.label.setText(f"SpO2: {true_value} %")
         #Graph
         self.updateVerticalLine()
+
+    # using server
+    # def setSpO2Value(self, server):
+    #     # Set a new SpO2 value and update the vertical line
+    #     if server is None:
+    #        new_value = 0
+    #     else: 
+    #         new_value = server.SpO2
+    #     #Label
+    #     self.label.setText(f"SpO2: {new_value} %")
+    #     #Graph
+    #     self.updateVerticalLine()
 
 # # Example usage:
 # # Create a parent widget
