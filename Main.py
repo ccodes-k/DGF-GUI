@@ -26,7 +26,7 @@ class Overlayed_W(MapDisplay):
         self.hr_monitor.hr_updated.connect(self.handle_hr_update)  # Connect signal to handler
 
         # Initialize self.value_a to None
-        self.value_a = None
+        self.value_a = 0
 
         # Start heart rate monitoring in a separate coroutine
         self.start_hr_monitoring()
@@ -140,21 +140,8 @@ class Overlayed_W(MapDisplay):
     def handle_hr_update(self, hr_val):
         # This method is called whenever a new heart rate value is received
         print(f"Received HR Value: {hr_val}")
-        # Update self.value_a with the new heart rate value
-        self.value_a = hr_val
-        # Here you can perform any additional actions based on the updated heart rate value
-        self.update_ui()  # Update the UI when new data is received
-
-    def update_ui(self):
-        # Update the UI elements with the latest heart rate value (self.value_a)
-        if self.value_a is not None:
-            try:
-                hr_value = int(self.value_a)
-                # Use hr_value as needed in your application
-                # Example: Update a QLabel text with the heart rate value
-                self.label_hr.setText(f"Heart Rate: {hr_value} bpm")
-            except ValueError:
-                print("Invalid heart rate value received")
+        # You can store or use hr_val as needed in your application
+        self.value_a = hr_val  # Example: Assign hr_val to self.value_a
 
     def start_hr_monitoring(self):
         loop = asyncio.get_event_loop()
