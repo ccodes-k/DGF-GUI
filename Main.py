@@ -14,7 +14,7 @@ from utils.server1 import Talker
 from utils.GPS_data import SerialDataWriter
 
 import asyncio
-from utils.HR_BT import HeartRateMonitor  # Import the HeartRateMonitor class
+from utils.HR_BT import HeartRateMonitor
 
 class Overlayed_W(MapDisplay):
     def __init__(self, parent=None):
@@ -88,10 +88,15 @@ class Overlayed_W(MapDisplay):
         self.DGW.W4.hide()
         self.view_window.b3.setChecked(False)
     
-    # For BT HR
-        self.address = "a0:9e:1a:c3:53:b9"  # Bluetooth device address
-        self.hr_monitor = HeartRateMonitor(self.address)  # Create an instance of HeartRateMonitor
-        self.run_hr_monitor()  # Start heart rate monitoring when Overlayed_W instance is created
+    # Instantiate HeartRateMonitor
+        self.heart_rate_monitor = HeartRateMonitor("a0:9e:1a:c3:53:b9")  # Replace with your device address
+
+        # Start heart rate monitoring process asynchronously
+        self.start_hr_monitoring()
+
+    def start_hr_monitoring(self):
+        # Run HeartRateMonitor's monitoring process
+        asyncio.create_task(self.hr_monitor.run())
 
     def resizeEvent(self, event):
         super().resizeEvent(event)
@@ -179,22 +184,6 @@ class Overlayed_W(MapDisplay):
 
     # For hide and show
         ViewWindow.update_view(self,self.view_window)
-
-    async def start_hr_monitoring(self):
-        """Start heart rate monitoring asynchronously."""
-        try:
-            await self.hr_monitor.start_monitoring()
-        except Exception as e:
-            print(f"Error starting heart rate monitoring: {e}")
-
-    def stop_hr_monitoring(self):
-        """Stop heart rate monitoring."""
-        self.hr_monitor.stop_monitoring()
-
-    def run_hr_monitor(self):
-        """Run heart rate monitoring coroutine."""
-        asyncio.create_task(self.start_hr_monitoring())  # Start heart rate monitoring in a background task
-
 
 if __name__ == "__main__":
     app = QApplication([])
