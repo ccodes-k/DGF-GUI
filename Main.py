@@ -142,10 +142,9 @@ class Overlayed_W(MapDisplay):
         # You can store or use hr_val as needed in your application
         self.value_a = hr_val  # Example: Assign hr_val to self.value_a
 
-    def process_events(self):
-        # Manually process PyQt5 events to keep the GUI responsive
-        loop = QtCore.QEventLoop()
-        loop.processEvents()
+    async def start_hr_monitoring(self):
+        # Start heart rate monitoring asynchronously
+        await self.hr_monitor.run_HR("a0:9e:1a:c3:53:b9")
 
     # To update data
     def update_data(self):
@@ -201,7 +200,7 @@ if __name__ == "__main__":
     window = Overlayed_W()
     window.showMaximized()
 
-    # Start heart rate monitoring asynchronously
-    asyncio.create_task(window.hr_monitor.run_HR("a0:9e:1a:c3:53:b9"))
+    # Start heart rate monitoring coroutine in the background
+    asyncio.create_task(window.start_hr_monitoring())
 
     sys.exit(app.exec_())
