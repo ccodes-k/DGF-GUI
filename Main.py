@@ -14,12 +14,22 @@ from utils.server1 import Talker
 from utils.GPS_data import SerialDataWriter
 
 import asyncio
-from utils.HR_BT import HeartRateMonitor
+import threading
+from bleak import BleakClient
+import bitstruct
+import struct
+
+HR_MEAS = "00002A37-0000-1000-8000-00805F9B34FB"
+global_values = {
+    'hr_val': 0
+}
 
 class Overlayed_W(MapDisplay):
     def __init__(self, parent=None):
         super(Overlayed_W, self).__init__(parent)
         self.setWindowTitle("Diver Monitor")
+
+        self.hr_val = 0
 
     # Option Buttons:
 
@@ -87,24 +97,6 @@ class Overlayed_W(MapDisplay):
         self.view_window.b2.setChecked(False)
         self.DGW.W4.hide()
         self.view_window.b3.setChecked(False)
-    
-    # Initialize HeartRateMonitor instance
-        self.hr_monitor = HeartRateMonitor("a0:9e:1a:c3:53:b9")  # Replace with your BLE device address
-
-        # Start heart rate monitoring process asynchronously
-        self.start_hr_monitoring()
-
-        # Create a QTimer to periodically process PyQt events
-        self.timer = QtCore.QTimer(self)
-        self.timer.timeout.connect(self.process_events)
-        self.timer.start(100)  # Process events every 100 milliseconds
-
-    def start_hr_monitoring(self):
-        asyncio.ensure_future(self.hr_monitor.run())
-
-    def process_events(self):
-        # Allow PyQt event loop to process pending events
-        QtCore.QCoreApplication.processEvents()
 
     def resizeEvent(self, event):
         super().resizeEvent(event)
@@ -174,7 +166,7 @@ class Overlayed_W(MapDisplay):
 
     # For Data Graphs
         # For Heart Rate
-        self.DGW.W1.updateWaveHR()
+        self.DGW.W1.updateWaveHR(self.hr_val)
         # For SpO2
         # self.DGW.W2.setSpO2Value(self.config_window.server)
         # For Temperature
@@ -193,7 +185,44 @@ class Overlayed_W(MapDisplay):
     # For hide and show
         ViewWindow.update_view(self,self.view_window)
 
+#Heart Rate sensor
+async def hr_sensor(address, debug=False):
+    async with BleakClient(address) as client:
+        connected = client.is_connected  
+        print("Connected: {0}".format(connected))
+
+        def hr_val_handler(sender, data):
+            global global_values
+
+            """Simple notification handler for Heart Rate Measurement."""
+            (hr_fmt,
+             snsr_detect,
+             snsr_cntct_spprtd,
+             nrg_expnd,
+             rr_int) = bitstruct.unpack("b1b1b1b1b1<", data)
+            if hr_fmt:
+                hr_val, = struct.unpack_from("<H", data, 1)
+            else:
+                hr_val, = struct.unpack_from("<B", data, 1)
+            print(f"HR Value: {hr_val}")
+            global_values['hr_val'] = hr_val
+
+        await client.start_notify(HR_MEAS, hr_val_handler)
+
+        while client.is_connected:  
+            await asyncio.sleep(1)
+
+def run_heart_rate_monitor(address, debug=False):
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    loop.run_until_complete(hr_sensor(address))
+
 if __name__ == "__main__":
+    address = "a0:9e:1a:c3:53:b9"
+    # Start the heart rate monitoring in a separate thread
+    heart_rate_thread = threading.Thread(target=run_heart_rate_monitor, args=(address,))
+    heart_rate_thread.start()
+
     app = QApplication([])
     window = Overlayed_W()
     window.showMaximized()
