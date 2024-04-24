@@ -21,7 +21,7 @@ class SerialDataWriter:
     def __init__(self, port='COM3', baudrate=115200, timeout=0.5):
         self.ser = serial.Serial(port, baudrate, timeout=timeout)
 
-    def read_and_write_to_file(self, filename='LLD.txt'):
+    def read_and_write_to_file(self, filename='./assets/ReadFiles/LLD.txt'):
         with open(filename, 'w') as f:
             while True:
                 line = self.ser.readline().decode('utf-8').strip()
