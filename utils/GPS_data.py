@@ -1,49 +1,48 @@
 # using serial port to get GPS data
 import serial
 
-class SerialDataWriter:
-    # window: COM3  Ubuntu : /dev/ttyUSB0
-    def __init__(self, port='/dev/ttyUSB0', baudrate=115200, timeout=0, parity=serial.PARITY_EVEN, rtscts=1):
-        """
-        Initializes the SerialDataWriter object with specified serial port settings.
-        """
-        self.ser = serial.Serial(port, baudrate, timeout=timeout, parity=parity, rtscts=rtscts)
+def nmea_to_decimal_degrees(coord_str, direction):
+    if coord_str:
+        if '.' in coord_str:
+            decimal_point_index = coord_str.index('.')
+            degrees = float(coord_str[:decimal_point_index - 2])
+            minutes = float(coord_str[decimal_point_index - 2:])
+        
+            decimal_degrees = degrees + (minutes / 60.0)
+        
+            if direction == 'S' or direction == 'W':
+                decimal_degrees = -decimal_degrees
+        
+            return decimal_degrees
+    
+    return None
 
-    def read_and_write_to_file(self, filename='./assets/ReadFiles/LLD.txt'):
-        """
-        Reads latest data from the serial port and writes it to the specified file.
-        :param filename: The name of the file to write the data to.
-        """
-        t = ""
-        while True:
-            # Read characters from the serial port until newline is encountered
-            cc = self.ser.read().decode('utf-8')
-            t += cc
-            if cc == '\n':
-                # Check if the received data starts with "$GNRMC"
-                if t.startswith('$GNRMC'):
-                    # Split the data into fields using comma separator
-                    data = t.split(',')
-                    # Check if there are enough fields
+class SerialDataWriter:
+    def __init__(self, port='COM3', baudrate=115200, timeout=0.5):
+        self.ser = serial.Serial(port, baudrate, timeout=timeout)
+
+    def read_and_write_to_file(self, filename='LLD.txt'):
+        with open(filename, 'w') as f:
+            while True:
+                line = self.ser.readline().decode('utf-8').strip()
+                if line.startswith('$GNRMC'):
+                    data = line.split(',')
                     if len(data) >= 8:
-                        # Extract latitude and longitude and concatenate them
-                        Lat = data[3] + " " + data[4]
-                        Long = data[5] + " " + data[6]
-                        LL_str = str(Lat) + "\n" + str(Long) + "\n"
-                        # Extract track made good in degrees True
+                        Lat = data[3]
+                        Lat_dir = data[4]
+                        Long = data[5]
+                        Long_dir = data[6]
                         Deg = data[8]
-                        Deg_str = Deg
-                        # Write latest latitude, longitude, and track made good to file
-                        with open(filename, 'w') as f:
-                            f.write(LL_str)  # Write lat and lon to file
-                            f.write(Deg_str)  # Write Track made good to file
-                            f.flush
-                        break  # Exit the loop once data is written to file
-                t = ""
+                        
+                        latitude = nmea_to_decimal_degrees(Lat, Lat_dir)
+                        longitude = nmea_to_decimal_degrees(Long, Long_dir)
+                        
+                        if latitude is not None and longitude is not None:
+                            f.write(f'{latitude} {longitude}\n{Deg}')
+                            f.flush()
+                            break
 
 # Example usage:
-# Create an instance of the SerialDataWriter class
-# data_writer = SerialDataWriter()
-
-# Call the read_and_write_to_file method to read latest data from serial port and write it to file
-# data_writer.read_and_write_to_file()
+# if __name__ == '__main__':
+#     data_writer = SerialDataWriter(port='COM3', baudrate=115200)
+#     data_writer.read_and_write_to_file()

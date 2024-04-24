@@ -48,18 +48,12 @@ class MapDisplay(QWidget):
 
         with open('./assets/ReadFiles/LLD.txt', 'r') as f1:
             lines = f1.readlines()
-            if len(lines) >= 3:
-                # Latitude
+            if len(lines) >= 2:
+                # Latitude & Longitude
                 lat_line = lines[0].strip().split()
-                if len(lat_line) >= 2:
+                if len(lat_line) >= 3:
                     Lat = lat_line[0]
-                    LatD = lat_line[1]
-
-                # Longitude
-                long_line = lines[1].strip().split()
-                if len(long_line) >= 2:
-                    Long = long_line[0]
-                    LongD = long_line[1]
+                    Long = lat_line[1]
         
         Lat = float(Lat)
         Long = float(Long)
@@ -83,4 +77,4 @@ class MapDisplay(QWidget):
             f3.write(LL_str)
             f3.flush
         
-        self.LLL.setText("Lat: " + nLat + " " + LatD + " | Long: " + nLong + " " + LongD)
+        self.LLL.setText("Lat: " + nLat + " | Long: " + nLong)

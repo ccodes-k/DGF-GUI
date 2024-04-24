@@ -76,8 +76,7 @@ class Overlayed_W(MapDisplay):
         self.Cam = FloatingW.Cam_Floating_Widget(parent=self, server =self.config_window)
     
     # for GPS data
-        self.data_writer = SerialDataWriter()
-        # get GPS data
+        self.data_writer = SerialDataWriter(port='/dev/ttyUSB0', baudrate=115200)
         self.data_writer.read_and_write_to_file()
 
     # For map server
