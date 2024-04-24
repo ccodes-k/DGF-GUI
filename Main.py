@@ -113,9 +113,9 @@ class Overlayed_W(MapDisplay):
         self.Compass.Com_update_position_Widgets()
 
     # SLAM Buttons
-        self.SI.SI_update_position_Buttons()
+        self.SI.SI_update_position()
         # self.PlayB.Slam_update_position_Buttons(1)
-        self.StartB.Slam_update_position_Buttons(0)
+        self.StartB.SB_update_position()
     
     # Data Graphs
         self.DGW.Data_update_position_Widgets()

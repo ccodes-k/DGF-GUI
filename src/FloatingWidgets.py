@@ -92,13 +92,21 @@ class Slam_Floating_Button(QPushButton):
         self.setStyleSheet("background-color: rgba(255, 255, 255, 200); border-radius: 10px;")
         self.setFont(QFont("Segoe UI", 12))
 
-    # Bottom Center
-    def Slam_update_position_Buttons(self, index):
+    # Bottom Center - upper than buttons
+    def SB_update_position(self):
         parent_width = self.parent().width()
-        total_width = 2 * self.width() + 10  # Total width of all three buttons
-        x = (parent_width - total_width) // 2 + index * (self.width() + 5)
-        y = self.parent().height() - self.height() - self.paddingBottom  
-        self.setGeometry(x, y, self.width() + 2, self.height() + 2)
+        parent_height = self.parent().height()
+        x = (parent_width - self.width()) // 2
+        y = int(parent_height - self.height() - self.paddingBottom)
+        self.setGeometry(x, y + 10, 150, 40)
+
+    # Bottom Center
+    # def Slam_update_position_Buttons(self, index):
+    #     parent_width = self.parent().width()
+    #     total_width = 2 * self.width() + 10  # Total width of all three buttons
+    #     x = (parent_width - total_width) // 2 + index * (self.width() + 5)
+    #     y = self.parent().height() - self.height() - self.paddingBottom  
+    #     self.setGeometry(x, y, self.width() + 2, self.height() + 2)
     
     # Override the hover enter event
     def enterEvent(self, event):
@@ -121,7 +129,7 @@ class SI_Floating_Button(QLabel):
         self.setAlignment(Qt.AlignCenter)
 
     # Bottom Center - upper than buttons
-    def SI_update_position_Buttons(self):
+    def SI_update_position(self):
         parent_width = self.parent().width()
         parent_height = self.parent().height()
         x = (parent_width - self.width()) // 2
