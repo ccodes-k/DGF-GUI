@@ -20,9 +20,8 @@ import bitstruct
 import struct
 
 HR_MEAS = "00002A37-0000-1000-8000-00805F9B34FB"
-global_values = {
-    'hr_val': 0
-}
+hrv = 0
+stop_thread = False
 
 class Overlayed_W(MapDisplay):
     def __init__(self, parent=None):
@@ -133,6 +132,8 @@ class Overlayed_W(MapDisplay):
             self.config_window.close()
             self.view_window.close()
             self.talker_instatnce.stop_slam()
+            global stop_thread
+            stop_thread = True
             event.accept()  # Allow the window to close
 
     # To update data
@@ -165,7 +166,7 @@ class Overlayed_W(MapDisplay):
 
     # For Data Graphs
         # For Heart Rate
-        self.DGW.W1.updateWaveHR(self.hr_val)
+        self.DGW.W1.updateWaveHR(hrv)
         # For SpO2
         # self.DGW.W2.setSpO2Value(self.config_window.server)
         # For Temperature
@@ -191,9 +192,10 @@ async def hr_sensor(address, debug=False):
         print("Connected: {0}".format(connected))
 
         def hr_val_handler(sender, data):
-            global global_values
-
             """Simple notification handler for Heart Rate Measurement."""
+            if stop_thread == True:
+                return  # Exit the handler if stop_thread is set
+
             (hr_fmt,
              snsr_detect,
              snsr_cntct_spprtd,
@@ -204,11 +206,12 @@ async def hr_sensor(address, debug=False):
             else:
                 hr_val, = struct.unpack_from("<B", data, 1)
             print(f"HR Value: {hr_val}")
-            global_values['hr_val'] = hr_val
+            global hrv
+            hrv = hr_val
 
         await client.start_notify(HR_MEAS, hr_val_handler)
 
-        while client.is_connected:  
+        while client.is_connected and not stop_thread:  
             await asyncio.sleep(1)
 
 def run_heart_rate_monitor(address, debug=False):

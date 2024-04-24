@@ -45,15 +45,17 @@ class MapDisplay(QWidget):
     # LL is lat and long
     def update_LL(self):
         r_earth = 6378137  # Earth radius
+        Lat = 0
+        Long = 0
+        nLat = 0
+        nLong = 0
 
         with open('./assets/ReadFiles/LLD.txt', 'r') as f1:
             lines = f1.readlines()
-            if len(lines) >= 2:
+            if len(lines) == 3:
                 # Latitude & Longitude
-                lat_line = lines[0].strip().split()
-                if len(lat_line) >= 3:
-                    Lat = lat_line[0]
-                    Long = lat_line[1]
+                Lat = lines[0]
+                Long = lines[1]
         
         Lat = float(Lat)
         Long = float(Long)

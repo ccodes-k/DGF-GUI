@@ -37,12 +37,13 @@ class CompassDisplay(QWidget):
         main_layout.addWidget(container)
     
     def update_Deg(self):
+        Deg = 0
+
         with open('./assets/ReadFiles/LLD.txt', 'r') as f1:
-            content = f1.read()
-            # Extract values from the content
-            if len(content) >= 3:
+            lines = f1.readlines()
+            if len(lines) == 3:
                 # Degrees
-                Deg = content[2].strip()  
+                Deg = lines[2]
 
                 self.L1.setText("Direction: " + str(Deg) + " °")
-                self.W1.setAngle(int(Deg))
+                self.W1.setAngle(float(Deg))

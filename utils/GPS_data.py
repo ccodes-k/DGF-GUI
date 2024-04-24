@@ -38,7 +38,7 @@ class SerialDataWriter:
                         longitude = nmea_to_decimal_degrees(Long, Long_dir)
                         
                         if latitude is not None and longitude is not None:
-                            f.write(f'{latitude} {longitude}\n{Deg}')
+                            f.write(f'{latitude}\n{longitude}\n{Deg}')
                             f.flush()
                             break
 

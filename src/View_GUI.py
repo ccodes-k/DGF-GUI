@@ -55,10 +55,8 @@ class ViewWindow(QWidget):
         # For Heart Rate
         if view.b1.isChecked():
             self.DGW.W1.show()
-            self.DGW.W2.show()
         elif not view.b1.isChecked():
             self.DGW.W1.hide()
-            self.DGW.W2.hide()
         
         # For SpO2
         if view.b10.isChecked():
