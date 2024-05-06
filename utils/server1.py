@@ -100,8 +100,8 @@ class Talker:
             if self.show and self.showl:
                 self.show = False
                 self.showl = True
-                cv2.imshow('left', self.img_data)
-                cv2.imshow('right', self.img2_data)
+                # cv2.imshow('left', self.img_data)
+                # cv2.imshow('right', self.img2_data)
                 #self._out.write(self.img_data)
                 #self.pub.publish(self.br.cv2_to_imgmsg(self.img_data))
             if cv2.waitKey(1) & 0xFF == ord('q'):

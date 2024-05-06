@@ -68,8 +68,8 @@ class MapDisplay(QWidget):
             tx = float(tx)
             ty = float(ty)
 
-        nLat = (Lat + (tx / r_earth) * (180 / math.pi))
-        nLong = (Long + (ty / r_earth) * (180 / math.pi) / math.cos(Lat * math.pi / 180))
+        nLat = (Lat + (tx * 10 / r_earth) * (180 / math.pi))
+        nLong = (Long + (ty * 10 / r_earth) * (180 / math.pi) / math.cos(Lat * math.pi / 180))
 
         nLat = str(nLat)
         nLong = str(nLong)
