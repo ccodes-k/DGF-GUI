@@ -180,7 +180,8 @@ class Overlayed_W(MapDisplay):
     
     # For Diver Status
     # so the label will be Null, Safe or Danger
-        self.DiverStatus.update_status(self.config_window.server)
+        # self.DiverStatus.update_status(self.config_window.server)
+        self.DiverStatus.set_status("S")
 
     # For Camera
         self.Cam.Cam_update_position_Widgets()
