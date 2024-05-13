@@ -1,6 +1,6 @@
 for diving-googles.png, pause.png
 <a href="https://www.flaticon.com/free-icons/diver" title="diver icons">Diver icons created by Those Icons - Flaticon</a>
-<a href="https://www.flaticon.com/free-icons/ship" title="ship icons">Ship icons created by Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/fishing-boat" title="fishing boat icons">Fishing boat icons created by Freepik - Flaticon</a>
 
 for favicon.ico
 https://favicon.io/favicon-generator/

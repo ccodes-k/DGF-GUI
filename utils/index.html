@@ -47,14 +47,22 @@
             popupAnchor: [0, -32]
         });
 
-        var marker;
+        // The ship icon
+        var shipIcon = L.icon({
+            iconUrl: "/assets/Icons/fishing-boat.png",
+            iconSize: [40, 40],
+            iconAnchor: [20, 20],
+            popupAnchor: [0, -20]
+        });
+
+        var diverMarker, shipMarker;
 
         //update diver icon location
-        function updateMarkerPosition() {
+        function updateDiverPosition() {
             const timestamp = Date.now();
             const url = `/assets/ReadFiles/RLL.txt?timestamp=${timestamp}`;
             
-            console.log('Requesting:', url);
+            console.log('Requesting Diver location:', url);
 
             fetch(url)
                 .then(response => {
@@ -66,20 +74,50 @@
                     const [newLat, newLong] = content.split(' ').map(parseFloat);
                     console.log('New lat/long:', newLat, newLong);
 
-                    if (!marker) {
-                        marker = L.marker([newLat, newLong], { icon: customIcon }).addTo(map);
+                    if (!diverMarker) {
+                        diverMarker = L.marker([newLat, newLong], { icon: customIcon }).addTo(map);
                     } else {
-                        marker.setLatLng([newLat, newLong]);
+                        diverMarker.setLatLng([newLat, newLong]);
                     }
                 })
                 .catch(error => console.error('Error reading file:', error));
         }
 
-        // Update the marker position initially
-        updateMarkerPosition();
+        // Update ship's marker position
+        function updateShipPosition() {
+            const timestamp = Date.now();
+            const url = `/assets/ReadFiles/LLD.txt?timestamp=${timestamp}`;
 
-        // Update the marker position every 0.5 second
-        setInterval(updateMarkerPosition, 500);
+            console.log('Requesting ship location:', url);
+
+            fetch(url)
+                .then(response => {
+                    console.log('Response status:', response.status);
+                    return response.text();
+                })
+                .then(content => {
+                    console.log('Fetched ship location:', content);
+                    const [newLat, newLong] = content.split('\n').slice(0, 2).map(parseFloat); // Parsing latitude and longitude
+                    console.log('New ship lat/long:', newLat, newLong);
+
+                    if (!shipMarker) {
+                        shipMarker = L.marker([newLat, newLong], { icon: shipIcon }).addTo(map);
+                    } else {
+                        shipMarker.setLatLng([newLat, newLong]);
+                    }
+                })
+                .catch(error => console.error('Error reading ship location:', error));
+        }
+
+        // Update the diver's marker position initially
+        updateDiverPosition();
+        // Update the ship's marker position initially
+        updateShipPosition();
+
+        // Update the diver's marker position every 0.5 second
+        setInterval(updateDiverPosition, 500);
+        // Update the ship's marker position every 0.5 second
+        setInterval(updateShipPosition, 500);
     </script>
 </body>
 
