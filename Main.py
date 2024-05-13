@@ -75,11 +75,11 @@ class Overlayed_W(MapDisplay):
         self.Cam = FloatingW.Cam_Floating_Widget(parent=self, server =self.config_window)
     
     # for GPS data
-        self.data_writer = SerialDataWriter(port='/dev/ttyUSB0', baudrate=115200)
-        # Start reading and writing GPS data in a separate thread
-        self.data_thread = threading.Thread(target=self.data_writer.read_and_write_to_file)
-        self.data_thread.daemon = True  # Set the thread as a daemon so it will exit when the main thread exits
-        self.data_thread.start()
+        # self.data_writer = SerialDataWriter(port='/dev/ttyUSB0', baudrate=115200)
+        # # Start reading and writing GPS data in a separate thread
+        # self.data_thread = threading.Thread(target=self.data_writer.read_and_write_to_file)
+        # self.data_thread.daemon = True  # Set the thread as a daemon so it will exit when the main thread exits
+        # self.data_thread.start()
 
     # For map server
         # Connect the closeEvent of the main window to the stop_server method
