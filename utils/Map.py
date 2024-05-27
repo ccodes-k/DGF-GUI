@@ -68,15 +68,15 @@ class MapDisplay(QWidget):
             tx = float(tx)
             ty = float(ty)
 
-        nLat = (Lat + (tx * 5 / r_earth) * (180 / math.pi))
-        nLong = (Long + (ty * 5 / r_earth) * (180 / math.pi) / math.cos(Lat * math.pi / 180))
+        nLat = (Lat + (tx * 3 / r_earth) * (180 / math.pi))
+        nLong = (Long + (ty * 3 / r_earth) * (180 / math.pi) / math.cos(Lat * math.pi / 180))
 
         nLat = str(nLat)
         nLong = str(nLong)
 
-        with open('./assets/ReadFiles/RLL.txt', 'w') as f3:
-            LL_str = nLat + " " + nLong
-            f3.write(LL_str)
-            f3.flush
+        # with open('./assets/ReadFiles/RLL.txt', 'w') as f3:
+        #     LL_str = nLat + " " + nLong
+        #     f3.write(LL_str)
+        #     f3.flush
         
         self.LLL.setText("Lat: " + nLat + " | Long: " + nLong)

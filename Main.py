@@ -141,18 +141,20 @@ class Overlayed_W(MapDisplay):
 
     # To update data
     def update_data(self):
-    # For SLAM
-        if self.talker_instatnce.slam_SS == "start":
-             self.SI.setText("SLAM: Start")
-             self.StartB.setText("Stop")
-             self.StartB.clicked.disconnect()
-             self.StartB.clicked.connect(self.talker_instatnce.stop_slam)
+    # # For SLAM
+        # if self.talker_instatnce.slam_SS == "start":
+        #     self.SI.setText("SLAM: Start")
+        #     self.StartB.setText("Stop")
+        self.SI.setText("SLAM: Start")
+        self.StartB.setText("Stop")
+        #     self.StartB.clicked.disconnect()
+        #     self.StartB.clicked.connect(self.talker_instatnce.stop_slam)
 
-        if self.talker_instatnce.slam_SS == "stop":
-             self.SI.setText("SLAM: Stop")
-             self.StartB.setText("Start")
-             self.StartB.clicked.disconnect()
-             self.StartB.clicked.connect(self.talker_instatnce.start_slam)
+        # if self.talker_instatnce.slam_SS == "stop":
+        #     self.SI.setText("SLAM: Stop")
+        #     self.StartB.setText("Start")
+        #     self.StartB.clicked.disconnect()
+        #     self.StartB.clicked.connect(self.talker_instatnce.start_slam)
 
         # if self.talker_instatnce.slam_PP == False:
         #      self.SI.setText("SLAM: Pause")
@@ -180,7 +182,7 @@ class Overlayed_W(MapDisplay):
     
     # For Diver Status
     # so the label will be Null, Safe or Danger
-        # self.DiverStatus.update_status(self.config_window.server)
+        #self.DiverStatus.update_status(self.config_window.server)
         self.DiverStatus.set_status("S")
 
     # For Camera

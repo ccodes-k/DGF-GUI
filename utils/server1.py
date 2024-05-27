@@ -134,8 +134,8 @@ class Talker:
                     a = time.time()
                     image = socket.recv_pyobj()['img']
                     self.img_data = cv2.imdecode(image, flags=1)
-                    cv2.imwrite("left%05d.png" % count, self.img_data)
-                    Path("left%05d.png"%count).rename("Images/left/left%05d.png"%count)
+                #     cv2.imwrite("left%05d.png" % count, self.img_data)
+                #     Path("left%05d.png"%count).rename("Images/left/left%05d.png"%count)
                     count += 1
                     self.showl = True
                     self.got_img = True
@@ -162,8 +162,8 @@ class Talker:
                     # a = time.time()
                     image = socket2.recv_pyobj()['img2']
                     self.img2_data = cv2.imdecode(image, flags=1)
-                    cv2.imwrite("right%05d.png" % count2, self.img2_data)
-                    Path("right%05d.png"%count2).rename("Images/right/right%05d.png"%count2)
+                #     cv2.imwrite("right%05d.png" % count2, self.img2_data)
+                #     Path("right%05d.png"%count2).rename("Images/right/right%05d.png"%count2)
                     count2 += 1
                     self.show = True
                     self.got_img = True

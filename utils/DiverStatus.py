@@ -72,7 +72,7 @@ class StatusLabel(QWidget):
             # SpO2
             spo2 = server.SpO2
 
-            if 60 <= hr <= 120 and 95 <= spo2 <= 100:
+            if 60 <= hr <= 120:
                 # print("hr"+str(hr)+"spo2"+str(spo2))
                 self.set_status("S")  # Safe
             else:
