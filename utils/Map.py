@@ -56,9 +56,11 @@ class MapDisplay(QWidget):
                 # Latitude & Longitude
                 Lat = lines[0]
                 Long = lines[1]
+                deg = lines[2]
         
         Lat = float(Lat)
         Long = float(Long)
+        theta = float(deg)
 
         with open('./assets/ReadFiles/txty.txt', 'r') as f2:
             content = f2.read()
@@ -68,15 +70,18 @@ class MapDisplay(QWidget):
             tx = float(tx)
             ty = float(ty)
 
-        nLat = (Lat + (tx * 3 / r_earth) * (180 / math.pi))
-        nLong = (Long + (ty * 3 / r_earth) * (180 / math.pi) / math.cos(Lat * math.pi / 180))
+        coord_x = tx * math.cos(math.radians(theta)) - ty * math.sin(math.radians(theta))
+        coord_y = tx * math.sin(math.radians(theta)) - ty * math.cos(math.radians(theta))
+
+        nLat = (Lat + (coord_x/ r_earth) * (180 / math.pi))
+        nLong = (Long + (coord_y / r_earth) * (180 / math.pi) / math.cos(Lat * math.pi / 180))
 
         nLat = str(nLat)
         nLong = str(nLong)
 
-        # with open('./assets/ReadFiles/RLL.txt', 'w') as f3:
-        #     LL_str = nLat + " " + nLong
-        #     f3.write(LL_str)
-        #     f3.flush
+        with open('./assets/ReadFiles/RLL.txt', 'w') as f3:
+            LL_str = nLat + " " + nLong
+            f3.write(LL_str)
+            f3.flush
         
         self.LLL.setText("Lat: " + nLat + " | Long: " + nLong)

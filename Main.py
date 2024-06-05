@@ -75,11 +75,11 @@ class Overlayed_W(MapDisplay):
         self.Cam = FloatingW.Cam_Floating_Widget(parent=self, server =self.config_window)
     
     # for GPS data
-        # self.data_writer = SerialDataWriter(port='/dev/ttyUSB0', baudrate=115200)
-        # # Start reading and writing GPS data in a separate thread
-        # self.data_thread = threading.Thread(target=self.data_writer.read_and_write_to_file)
-        # self.data_thread.daemon = True  # Set the thread as a daemon so it will exit when the main thread exits
-        # self.data_thread.start()
+        self.data_writer = SerialDataWriter(port='/dev/ttyUSB0', baudrate=115200)
+        # Start reading and writing GPS data in a separate thread
+        self.data_thread = threading.Thread(target=self.data_writer.read_and_write_to_file)
+        self.data_thread.daemon = True  # Set the thread as a daemon so it will exit when the main thread exits
+        self.data_thread.start()
 
     # For map server
         # Connect the closeEvent of the main window to the stop_server method
@@ -141,20 +141,18 @@ class Overlayed_W(MapDisplay):
 
     # To update data
     def update_data(self):
-    # # For SLAM
-        # if self.talker_instatnce.slam_SS == "start":
-        #     self.SI.setText("SLAM: Start")
-        #     self.StartB.setText("Stop")
-        self.SI.setText("SLAM: Start")
-        self.StartB.setText("Stop")
-        #     self.StartB.clicked.disconnect()
-        #     self.StartB.clicked.connect(self.talker_instatnce.stop_slam)
+    # For SLAM
+        if self.talker_instatnce.slam_SS == "start":
+            self.SI.setText("SLAM: Start")
+            self.StartB.setText("Stop")
+            self.StartB.clicked.disconnect()
+            self.StartB.clicked.connect(self.talker_instatnce.stop_slam)
 
-        # if self.talker_instatnce.slam_SS == "stop":
-        #     self.SI.setText("SLAM: Stop")
-        #     self.StartB.setText("Start")
-        #     self.StartB.clicked.disconnect()
-        #     self.StartB.clicked.connect(self.talker_instatnce.start_slam)
+        if self.talker_instatnce.slam_SS == "stop":
+            self.SI.setText("SLAM: Stop")
+            self.StartB.setText("Start")
+            self.StartB.clicked.disconnect()
+            self.StartB.clicked.connect(self.talker_instatnce.start_slam)
 
         # if self.talker_instatnce.slam_PP == False:
         #      self.SI.setText("SLAM: Pause")
@@ -175,18 +173,18 @@ class Overlayed_W(MapDisplay):
         # For SpO2
         # self.DGW.W2.setSpO2Value(self.config_window.server)
         # For Temperature
-        #self.DGW.W3.setTemperatureValue(self.config_window.server)
+        # self.DGW.W3.setTemperatureValue(self.config_window.server)
         # For Depth
-        #self.DGW.W4.setDepthValue(self.config_window.server)
+        # self.DGW.W4.setDepthValue(self.config_window.server)
         # print("Data Updated")
     
     # For Diver Status
     # so the label will be Null, Safe or Danger
         #self.DiverStatus.update_status(self.config_window.server)
-        self.DiverStatus.set_status("S")
-
-    # For Camera
-        self.Cam.Cam_update_position_Widgets()
+        if 60 <= hrv <= 120:
+            self.DiverStatus.set_status("S")
+        else:
+            self.DiverStatus.set_status("D")
 
     # For hide and show
         ViewWindow.update_view(self,self.view_window)
